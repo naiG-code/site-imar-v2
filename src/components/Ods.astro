@@ -2,11 +2,10 @@
 import { ods } from '../data/conteudo'
 ---
 
-<section class="section ods" id="ods" data-depth-mark="3000">
+<section class="section ods" id="ods">
   <div class="wrap">
     <div class="ods__head">
       <div>
-        <p class="eyebrow"><b>05</b> Compromissos globais · −3.000 m</p>
         <h2 class="h2" data-split>Alinhados à <em>Agenda 2030</em> da ONU.</h2>
       </div>
       <p class="lead" data-reveal>Cada projeto nasce para gerar impacto ambiental positivo, da gestão de resíduos à conservação dos ecossistemas marinhos.</p>
@@ -14,7 +13,7 @@ import { ods } from '../data/conteudo'
 
     <div class="ods__grid">
       {ods.map((o) => (
-        <article class="ods-card" style={`--c:${o.cor}`} data-reveal data-tilt>
+        <article class="ods-card" style={`--c:${o.cor}`} data-reveal>
           <span class="ods-card__n">{String(o.numero).padStart(2, '0')}</span>
           <div>
             <p class="ods-card__lbl">ODS {o.numero}</p>

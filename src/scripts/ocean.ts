@@ -81,7 +81,7 @@ export function criarOceano(canvas: HTMLCanvasElement, opts: { reduzido: boolean
   }
 
   const mobile = window.matchMedia('(max-width: 760px)').matches
-  const pr = Math.min(window.devicePixelRatio, mobile ? 1.5 : 2)
+  const pr = Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.5)
   renderer.setPixelRatio(pr)
   renderer.setClearColor(0x000000, 0)
 
@@ -91,7 +91,7 @@ export function criarOceano(canvas: HTMLCanvasElement, opts: { reduzido: boolean
   camera.position.copy(baseCam)
   camera.lookAt(0, 0, -6)
 
-  const geo = new PlaneGeometry(44, 40, mobile ? 120 : 230, mobile ? 100 : 190)
+  const geo = new PlaneGeometry(44, 40, mobile ? 90 : 160, mobile ? 70 : 130)
   geo.rotateX(-Math.PI / 2)
   geo.translate(0, 0, -14)
 
@@ -100,7 +100,7 @@ export function criarOceano(canvas: HTMLCanvasElement, opts: { reduzido: boolean
     uMouse: { value: new Vector2(0, -4) },
     uMouseK: { value: 0 },
     uPR: { value: pr },
-    uSize: { value: mobile ? 34 : 30 },
+    uSize: { value: mobile ? 40 : 38 },
     uA: { value: new Color() },
     uB: { value: new Color() },
     uOpacity: { value: 0 },

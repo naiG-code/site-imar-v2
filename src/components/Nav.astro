@@ -22,7 +22,6 @@ const links = [
     <nav class="nav__links" aria-label="Seções">
       {links.map((l, i) => (
         <a href={l.href} data-nav-link>
-          <small>0{i + 1}</small>
           <span class="nav__roll" data-text={l.label}><span>{l.label}</span></span>
         </a>
       ))}
@@ -49,7 +48,7 @@ const links = [
     <button class="menu__close" type="button" data-menu-close aria-label="Fechar menu"><Icon name="fechar" size={24} /></button>
     <nav aria-label="Menu">
       {links.map((l, i) => (
-        <a href={l.href} data-menu-link><small>0{i + 1}</small><span>{l.label}</span></a>
+        <a href={l.href} data-menu-link><span>{l.label}</span></a>
       ))}
     </nav>
     <div class="menu__foot" data-menu-link>

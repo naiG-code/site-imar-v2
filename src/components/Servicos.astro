@@ -6,20 +6,16 @@ import { publicos } from '../data/conteudo'
 const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
 ---
 
-<section class="servicos" id="servicos" data-depth-mark="1000">
-  <div class="servicos__pin" data-hscroll>
-    <div class="servicos__track" data-hscroll-track>
+<section class="servicos" id="servicos">
+    <div class="servicos__track">
       <header class="servicos__intro">
-        <p class="eyebrow"><b>02</b> Serviços · −1.000 m</p>
         <h2 class="h2" data-split>Soluções ambientais para o seu <em>negócio</em> ou evento.</h2>
         <p class="lead">Seis frentes de atuação, uma mesma base: a ciência do Instituto do Mar aplicada à sua realidade.</p>
-        <p class="servicos__hint" aria-hidden="true">Continue rolando <Icon name="seta" /></p>
       </header>
 
       {servicos.map((s, i) => (
-        <article class:list={['svc', { 'svc--hero': i === 0 }]} data-svc data-cursor="Ver">
+        <article class:list={['svc', { 'svc--hero': i === 0 }]} data-svc>
           <div class="svc__top">
-            <span class="svc__num">SRV·0{i + 1}</span>
             {s.selo && <span class="svc__selo">{s.selo}</span>}
           </div>
 
@@ -80,20 +76,15 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
           <a class="svc__cta" href="#contato" data-servico={s.id}>
             Quero esse serviço <Icon name="seta" />
           </a>
-          <span class="svc__sigla" aria-hidden="true">{s.sigla}</span>
         </article>
       ))}
     </div>
-
-    <div class="servicos__progress" aria-hidden="true"><i data-hscroll-bar></i></div>
-  </div>
 
   <div class="wrap publicos">
     <h3 class="publicos__title" data-reveal>Para quem a gente trabalha</h3>
     <div class="publicos__grid">
       {publicos.map((p, i) => (
         <article class="pub" data-reveal>
-          <span class="pub__n">0{i + 1}</span>
           <h4>{p.nome}</h4>
           <p>{p.texto}</p>
           <ul>{p.servicos.map((id) => <li>{nomeServico[id]}</li>)}</ul>
@@ -105,29 +96,22 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
 
 <style>
   .servicos { position: relative; z-index: 2; padding-top: clamp(96px, 12vw, 160px); }
-  .servicos__pin { position: relative; }
   .servicos__track {
-    display: flex; gap: 20px; padding: 0 var(--gutter); width: max-content; align-items: stretch;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 var(--gutter);
+    max-width: var(--maxw); margin: 0 auto;
   }
-  .servicos__intro { width: min(560px, 80vw); flex-shrink: 0; padding-right: 40px; display: flex; flex-direction: column; justify-content: center; }
-  .servicos__hint {
-    display: inline-flex; align-items: center; gap: 8px; margin: 40px 0 0;
-    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink);
-  }
-  .servicos__hint :global(svg) { transform: rotate(45deg); }
+  .servicos__intro { grid-column: 1 / -1; max-width: 760px; margin-bottom: 40px; }
 
   .svc {
-    position: relative; flex-shrink: 0; width: clamp(320px, 30vw, 440px); min-height: min(640px, 76vh);
+    position: relative; min-height: 0;
     display: flex; flex-direction: column; gap: 20px; padding: 28px; overflow: hidden;
     border-radius: var(--radius); border: 1px solid var(--line); background: var(--card);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     transition: border-color .5s, background-color .5s, transform .6s var(--ease-out);
   }
   .svc:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); background: var(--card-2); }
-  .svc--hero { width: clamp(340px, 38vw, 560px); background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 16%, transparent), var(--card) 60%); }
+  .svc--hero { background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 16%, transparent), var(--card) 60%); }
 
-  .svc__top { display: flex; justify-content: space-between; align-items: center; }
-  .svc__num { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: var(--muted); }
+  .svc__top { display: flex; justify-content: flex-end; align-items: center; min-height: 26px; }
   .svc__selo {
     padding: 6px 12px; border-radius: 999px; background: var(--accent); color: var(--on-accent);
     font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600;
@@ -150,23 +134,9 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
     font-size: 14px; font-weight: 650; text-decoration: none; transition: background-color .3s, color .3s, border-color .3s;
   }
   .svc__cta:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
-  .svc__sigla {
-    position: absolute; right: -6px; bottom: -18px; pointer-events: none;
-    font-family: var(--display); font-weight: 700; font-size: 120px; line-height: 1; letter-spacing: -.05em;
-    color: transparent; -webkit-text-stroke: 1px var(--line); transition: -webkit-text-stroke-color .5s;
-  }
-  .svc:hover .svc__sigla { -webkit-text-stroke-color: color-mix(in srgb, var(--accent) 40%, transparent); }
 
-  .servicos__progress { margin: 40px var(--gutter) 0; height: 1px; background: var(--line); }
-  .servicos__progress i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
-
-  /* Celular/tablet: sem rolagem horizontal fixa, cards empilhados */
-  @media (max-width: 900px) {
-    .servicos__track { flex-direction: column; width: auto; }
-    .servicos__intro { width: auto; padding: 0 0 20px; }
-    .servicos__hint, .servicos__progress { display: none; }
-    .svc, .svc--hero { width: auto; min-height: 0; }
-  }
+  @media (max-width: 1000px) { .servicos__track { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .servicos__track { grid-template-columns: 1fr; } }
 
   /* ---------- Para quem ---------- */
   .publicos { padding-top: clamp(96px, 12vw, 160px); }
@@ -176,7 +146,6 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
   .publicos__grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
   .pub { padding: 28px 24px 8px 0; }
   .pub + .pub { padding-left: 24px; border-left: 1px solid var(--line); }
-  .pub__n { font-family: var(--mono); font-size: 11px; color: var(--accent-ink); }
   .pub h4 {
     margin: 10px 0 12px; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1; font-weight: 400;
     font-size: clamp(30px, 3vw, 44px); letter-spacing: -.03em; line-height: 1;

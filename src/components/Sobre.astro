@@ -12,16 +12,14 @@ const numeros = [
 ]
 ---
 
-<section class="section sobre" id="sobre" data-depth-mark="200">
+<section class="section sobre" id="sobre">
   <div class="wrap">
-    <p class="eyebrow"><b>01</b> Quem somos · −200 m</p>
 
     <p class="sobre__manifesto" data-scrub-words>{sobre.manifesto}</p>
 
     <div class="sobre__grid">
-      <figure class="sobre__photo" data-wave-reveal data-cursor="IMar">
-        <img src={`${base}img/equipe.jpg`} alt="Equipe da IMar Júnior reunida segurando a bandeira da empresa" width="1400" height="1050" loading="lazy" data-parallax="-8" />
-        <figcaption>REG_001 · Equipe IMar Jr. · Santos/SP</figcaption>
+      <figure class="sobre__photo" data-wave-reveal>
+        <img src={`${base}img/equipe.jpg`} alt="Equipe da IMar Júnior reunida segurando a bandeira da empresa" width="1400" height="1050" loading="lazy" />
       </figure>
 
       <div class="sobre__text">
@@ -34,15 +32,15 @@ const numeros = [
     </div>
 
     <div class="sobre__mv">
-      <article class="card" data-reveal data-tilt>
+      <article class="card" data-reveal>
         <span class="tag">Missão</span>
         <p>{sobre.missao}</p>
       </article>
-      <article class="card" data-reveal data-tilt>
+      <article class="card" data-reveal>
         <span class="tag">Visão</span>
         <p>{sobre.visao}</p>
       </article>
-      <article class="card card--accent" data-reveal data-tilt>
+      <article class="card card--accent" data-reveal>
         <span class="tag">Valores</span>
         <ul>{valores.map((v) => <li>{v}</li>)}</ul>
       </article>
@@ -70,15 +68,10 @@ const numeros = [
     display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center;
   }
   .sobre__photo { position: relative; margin: 0; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 4.4; }
-  .sobre__photo img { width: 100%; height: 116%; object-fit: cover; object-position: 50% 40%; }
-  .sobre__photo figcaption {
-    position: absolute; left: 16px; bottom: 16px; padding: 8px 12px; border-radius: 999px;
-    background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-  }
+  .sobre__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
   .sobre__text p { margin: 0 0 18px; max-width: 52ch; }
   .sobre__cursos { list-style: none; padding: 0; margin: 32px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
-  .sobre__cursos li { padding: 16px 18px; background: color-mix(in oklab, var(--bg-0), var(--bg-1) calc(var(--depth) * 100%)); font-size: 14px; color: var(--muted); }
+  .sobre__cursos li { padding: 16px 18px; background: var(--bg-0); font-size: 14px; color: var(--muted); }
   .sobre__cursos b { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--accent-ink); font-weight: 600; }
 
   .sobre__mv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: clamp(80px, 10vw, 140px); }

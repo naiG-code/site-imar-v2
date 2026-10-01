@@ -1,12 +1,11 @@
 /*
  * IMar Júnior v2 · animações e interações
- * GSAP (ScrollTrigger + SplitText) + Lenis (rolagem suave) + Three.js (oceano)
+ * GSAP (ScrollTrigger + SplitText) + Three.js (oceano do topo).
+ * A rolagem é a nativa do navegador, sem atraso.
  */
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
-import Lenis from 'lenis'
-import { criarNeve } from './snow'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -16,32 +15,13 @@ const html = document.documentElement
 const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const ponteiroFino = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
-let lenis: Lenis | null = null
-
 export function iniciar() {
-  rolagemSuave()
   ancoras()
   tema()
   navegacao()
   menuMobile()
   formulario()
-
-  // O oceano 3D (Three.js) é carregado à parte para não atrasar o resto da página
-  const oceano = $<HTMLCanvasElement>('[data-ocean]')
-  let mar: { setMergulho(p: number): void } | null = null
-  let heroAtual = 0
-  if (oceano) {
-    import('./ocean').then(({ criarOceano }) => {
-      mar = criarOceano(oceano, { reduzido })
-      mar?.setMergulho(heroAtual)
-    })
-  }
-  const neve = !reduzido ? criarNeve($<HTMLCanvasElement>('[data-snow]')!) : null
-  profundidade((p, heroP) => {
-    heroAtual = heroP
-    neve?.setProfundidade(p)
-    mar?.setMergulho(heroP)
-  })
+  oceano()
 
   if (reduzido) {
     html.classList.add('hero-ready')
@@ -51,39 +31,49 @@ export function iniciar() {
     return
   }
 
+  entradaHero()
+  letreiros()
+  magneticos()
   document.fonts.ready.then(() => {
     titulos()
     revelar()
     palavrasNoScroll()
     revelarImagens()
-    parallax()
     contadores(false)
-    rolagemHorizontal()
+    servicos()
     etapas()
     decada()
     rodape()
     ScrollTrigger.refresh()
   })
-  letreiros()
-  inclinar()
-  magneticos()
-  cursor()
-  preloader().then(entradaHero)
 }
 
-/* ---------------- Rolagem suave ---------------- */
-function rolagemSuave() {
-  if (reduzido) return
-  lenis = new Lenis({ lerp: 0.09, smoothWheel: true })
-  lenis.on('scroll', ScrollTrigger.update)
-  gsap.ticker.add((t) => lenis?.raf(t * 1000))
-  gsap.ticker.lagSmoothing(0)
+/* O oceano 3D (Three.js) carrega depois do resto da página, sem travar nada */
+function oceano() {
+  const canvas = $<HTMLCanvasElement>('[data-ocean]')
+  const hero = $('[data-hero]')
+  if (!canvas || !hero) return
+  const carregar = () =>
+    import('./ocean').then(({ criarOceano }) => {
+      const mar = criarOceano(canvas, { reduzido })
+      if (!mar) return
+      let pendente = false
+      window.addEventListener('scroll', () => {
+        if (pendente) return
+        pendente = true
+        requestAnimationFrame(() => {
+          pendente = false
+          mar.setMergulho(Math.min(1, scrollY / hero.offsetHeight))
+        })
+      }, { passive: true })
+    })
+  if ('requestIdleCallback' in window) requestIdleCallback(carregar, { timeout: 1200 })
+  else setTimeout(carregar, 300)
 }
 
-function irPara(alvo: string | number | HTMLElement, duracao = 1.6) {
-  if (lenis) lenis.scrollTo(alvo, { duration: duracao, easing: (t) => 1 - Math.pow(1 - t, 4) })
-  else if (typeof alvo === 'number') window.scrollTo({ top: alvo })
-  else (typeof alvo === 'string' ? $(alvo) : alvo)?.scrollIntoView()
+function irPara(alvo: number | HTMLElement) {
+  const top = typeof alvo === 'number' ? alvo : alvo.getBoundingClientRect().top + scrollY
+  window.scrollTo({ top, behavior: reduzido ? 'auto' : 'smooth' })
 }
 
 function ancoras() {
@@ -96,7 +86,7 @@ function ancoras() {
     if (alvo === null) return
     e.preventDefault()
     fecharMenu()
-    irPara(alvo as number | HTMLElement, id === '#topo' ? 2.4 : 1.6)
+    irPara(alvo as number | HTMLElement)
     history.replaceState(null, '', id === '#topo' ? location.pathname : id)
   })
 }
@@ -142,8 +132,7 @@ function navegacao() {
     nav.classList.toggle('is-hidden', y > 500 && y > ultimo && !menuAberto)
     ultimo = y
   }
-  if (lenis) lenis.on('scroll', (l: Lenis) => aoRolar(l.scroll))
-  else window.addEventListener('scroll', () => aoRolar(scrollY), { passive: true })
+  window.addEventListener('scroll', () => aoRolar(scrollY), { passive: true })
 
   const links = $$<HTMLAnchorElement>('[data-nav-link]')
   links.forEach((a) => {
@@ -171,7 +160,6 @@ function menuMobile() {
     aberto = true
     menu.hidden = false
     abrir.setAttribute('aria-expanded', 'true')
-    lenis?.stop()
     gsap.timeline()
       .fromTo(bg, { clipPath: 'circle(0% at calc(100% - 48px) 40px)' }, { clipPath: 'circle(150% at calc(100% - 48px) 40px)', duration: 0.9, ease: 'expo.inOut' })
       .fromTo(itens, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06 }, '-=.4')
@@ -181,7 +169,6 @@ function menuMobile() {
     if (!aberto) return
     aberto = false
     abrir.setAttribute('aria-expanded', 'false')
-    lenis?.start()
     gsap.to(bg, {
       clipPath: 'circle(0% at calc(100% - 48px) 40px)',
       duration: 0.7,
@@ -196,85 +183,6 @@ function menuMobile() {
   abrir.addEventListener('click', abrirMenu)
   $('[data-menu-close]', menu)?.addEventListener('click', fecharMenu)
   document.addEventListener('keydown', (e) => e.key === 'Escape' && fecharMenu())
-}
-
-/* ---------------- Profundímetro ---------------- */
-const zonas = [
-  { ate: 200, nome: 'Epipelágica' },
-  { ate: 1000, nome: 'Mesopelágica' },
-  { ate: 4000, nome: 'Batipelágica' },
-  { ate: Infinity, nome: 'Abissopelágica' },
-]
-
-function profundidade(cb: (p: number, heroP: number) => void) {
-  const valor = $('[data-depth]')
-  const zona = $('[data-zone]')
-  const barra = $('[data-gauge-bar]')
-  const hero = $('[data-hero]')
-  let zonaAtual = ''
-
-  const atualizar = () => {
-    const max = document.documentElement.scrollHeight - innerHeight
-    const y = lenis ? lenis.scroll : scrollY
-    const p = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0
-    const heroP = hero ? Math.min(1, y / hero.offsetHeight) : 0
-    html.style.setProperty('--depth', p.toFixed(4))
-    html.classList.toggle('depth-on', y > innerHeight * 0.6)
-    const m = Math.round(p * 5000)
-    if (valor) valor.textContent = String(m).padStart(4, '0')
-    if (barra) barra.style.transform = `translateY(${p * 113}px)`
-    const z = zonas.find((z) => m < z.ate)!.nome
-    if (zona && z !== zonaAtual) {
-      zonaAtual = z
-      zona.textContent = z
-      if (!reduzido) gsap.fromTo(zona, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.5 })
-    }
-    cb(p, heroP)
-  }
-  if (lenis) lenis.on('scroll', atualizar)
-  else window.addEventListener('scroll', atualizar, { passive: true })
-  window.addEventListener('resize', atualizar)
-  atualizar()
-}
-
-/* ---------------- Preloader ---------------- */
-function preloader(): Promise<void> {
-  const pre = $('[data-preloader]')
-  const visivel = pre && getComputedStyle(pre).display !== 'none'
-  if (!pre || !visivel) {
-    pre?.remove()
-    return Promise.resolve()
-  }
-  try {
-    sessionStorage.setItem('imar-visitou', '1')
-  } catch {}
-  lenis?.stop()
-  const fill = $('[data-preloader-fill]', pre)
-  const count = $('[data-preloader-count]', pre)
-  const wave = $('[data-preloader-wave]', pre)
-  const n = { v: 0 }
-
-  return new Promise((resolve) => {
-    gsap.timeline({
-      onComplete: () => {
-        pre.remove()
-        lenis?.start()
-      },
-    })
-      .to(n, {
-        v: 100,
-        duration: 1.5,
-        ease: 'power2.inOut',
-        onUpdate: () => {
-          if (count) count.textContent = String(Math.round(n.v)).padStart(3, '0')
-          if (fill) fill.style.clipPath = `inset(${100 - n.v}% 0 0 0)`
-        },
-      })
-      .to('.preloader__inner', { y: -40, opacity: 0, duration: 0.5, ease: 'power2.in' }, '+=.15')
-      .add(resolve, '-=.05')
-      .to(pre, { yPercent: -100, duration: 1.1, ease: 'expo.inOut' }, '<')
-      .to(wave, { attr: { d: 'M0 0 L0 0 C 240 0 480 0 720 0 C 960 0 1200 0 1440 0 L1440 0 Z' }, duration: 1.1, ease: 'expo.inOut' }, '<')
-  })
 }
 
 /* ---------------- Hero ---------------- */
@@ -355,21 +263,11 @@ function revelarImagens() {
   })
 }
 
-function parallax() {
-  $$('[data-parallax]').forEach((el) => {
-    const v = Number(el.dataset.parallax) || -10
-    gsap.fromTo(el, { yPercent: 0 }, {
-      yPercent: v,
-      ease: 'none',
-      scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
-    })
-  })
-}
-
 function contadores(imediato: boolean) {
   $$('[data-count]').forEach((el) => {
     const fim = Number(el.dataset.count)
-    if (imediato) return void (el.textContent = String(fim))
+    // Ano de fundação não "conta", só aparece
+    if (imediato || el.dataset.countPlain !== undefined) return void (el.textContent = String(fim))
     const n = { v: 0 }
     el.textContent = '0'
     gsap.to(n, {
@@ -386,69 +284,26 @@ function contadores(imediato: boolean) {
 function letreiros() {
   $$('[data-marquee]').forEach((m) => {
     const track = $('[data-marquee-track]', m)!
-    const dir = Number(m.dataset.dir) || 1
-    const tween = dir > 0
-      ? gsap.fromTo(track, { xPercent: 0 }, { xPercent: -50, duration: 50, ease: 'none', repeat: -1 })
-      : gsap.fromTo(track, { xPercent: -50 }, { xPercent: 0, duration: 50, ease: 'none', repeat: -1 })
-    lenis?.on('scroll', (l: Lenis) => {
-      const v = Math.min(Math.abs(l.velocity), 60)
-      gsap.to(tween, {
-        timeScale: 1 + v / 5,
-        duration: 0.2,
-        overwrite: true,
-        onComplete: () => void gsap.to(tween, { timeScale: 1, duration: 1.4, ease: 'power2.out' }),
-      })
-      gsap.to(track, { skewX: -Math.sign(l.velocity) * v * 0.12 * dir, duration: 0.4, overwrite: 'auto' })
-    })
+    const ida = Number(m.dataset.dir) !== -1
+    const tween = gsap.fromTo(track, { xPercent: ida ? 0 : -50 }, { xPercent: ida ? -50 : 0, duration: 50, ease: 'none', repeat: -1 })
+    // Só anima quando está visível na tela
+    ScrollTrigger.create({ trigger: m, start: 'top bottom', end: 'bottom top', onToggle: (st) => (st.isActive ? tween.play() : tween.pause()) })
   })
 }
 
-/* ---------------- Serviços: rolagem horizontal ---------------- */
-function rolagemHorizontal() {
-  const pin = $('[data-hscroll]')
-  const track = $('[data-hscroll-track]')
-  const barra = $('[data-hscroll-bar]')
-  if (!pin || !track) return
-
-  const desenhar = (svg: SVGElement, opts: ScrollTrigger.Vars) => {
-    const paths = $$<SVGGeometryElement>('path, circle', svg)
-    paths.forEach((p) => p.setAttribute('pathLength', '1'))
-    gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, {
-      strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut', stagger: 0.12, scrollTrigger: opts,
-    })
-  }
-
-  const mm = gsap.matchMedia()
-  mm.add('(min-width: 901px)', () => {
-    const distancia = () => track.scrollWidth - innerWidth
-    const tween = gsap.to(track, {
-      x: () => -distancia(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: pin,
-        start: 'top top+=40',
-        end: () => `+=${distancia()}`,
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (st) => barra && gsap.set(barra, { scaleX: st.progress }),
-      },
-    })
-    $$('[data-svc]').forEach((card) => {
-      gsap.fromTo(card, { rotateY: -14, opacity: 0.4, transformPerspective: 1200 }, {
-        rotateY: 0, opacity: 1, ease: 'none',
-        scrollTrigger: { trigger: card, containerAnimation: tween, start: 'left 100%', end: 'left 55%', scrub: true },
+/* ---------------- Serviços: cards sobem e os ícones se desenham ---------------- */
+function servicos() {
+  ScrollTrigger.batch('[data-svc]', {
+    start: 'top 88%',
+    once: true,
+    onEnter: (cards) => {
+      gsap.fromTo(cards, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', stagger: 0.08 })
+      cards.forEach((card, i) => {
+        const paths = $$<SVGGeometryElement>('[data-draw] path, [data-draw] circle', card)
+        paths.forEach((p) => p.setAttribute('pathLength', '1'))
+        gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut', stagger: 0.1, delay: 0.2 + i * 0.08 })
       })
-      const svg = $<SVGElement>('[data-draw]', card)
-      if (svg) desenhar(svg, { trigger: card, containerAnimation: tween, start: 'left 80%', once: true })
-    })
-  })
-  mm.add('(max-width: 900px)', () => {
-    $$('[data-svc]').forEach((card) => {
-      gsap.fromTo(card, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: card, start: 'top 88%', once: true } })
-      const svg = $<SVGElement>('[data-draw]', card)
-      if (svg) desenhar(svg, { trigger: card, start: 'top 80%', once: true })
-    })
+    },
   })
 }
 
@@ -488,24 +343,6 @@ function rodape() {
 }
 
 /* ---------------- Interações de ponteiro ---------------- */
-function inclinar() {
-  if (!ponteiroFino) return
-  $$('[data-tilt]').forEach((el) => {
-    gsap.set(el, { transformPerspective: 900 })
-    const rx = gsap.quickTo(el, 'rotateX', { duration: 0.6, ease: 'power3' })
-    const ry = gsap.quickTo(el, 'rotateY', { duration: 0.6, ease: 'power3' })
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect()
-      ry(((e.clientX - r.left) / r.width - 0.5) * 10)
-      rx(-((e.clientY - r.top) / r.height - 0.5) * 10)
-    })
-    el.addEventListener('pointerleave', () => {
-      rx(0)
-      ry(0)
-    })
-  })
-}
-
 function magneticos() {
   if (!ponteiroFino) return
   $$('[data-magnetic]').forEach((el) => {
@@ -520,29 +357,6 @@ function magneticos() {
       gsap.to(el, { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, .4)' })
     })
   })
-}
-
-function cursor() {
-  const c = $('[data-cursor]')
-  const label = $('[data-cursor-label]')
-  if (!c || !ponteiroFino) return
-  html.classList.add('has-cursor')
-  const x = gsap.quickTo(c, 'x', { duration: 0.35, ease: 'power3' })
-  const y = gsap.quickTo(c, 'y', { duration: 0.35, ease: 'power3' })
-  window.addEventListener('pointermove', (e) => {
-    x(e.clientX)
-    y(e.clientY)
-  })
-  document.addEventListener('pointerover', (e) => {
-    const t = e.target as HTMLElement
-    const comLabel = t.closest<HTMLElement>('[data-cursor]:not(.cursor)')
-    const link = t.closest('a, button, label, select, input, textarea')
-    c.classList.toggle('is-label', !!comLabel && !link)
-    c.classList.toggle('is-hover', !!link)
-    if (label) label.textContent = comLabel && !link ? comLabel.dataset.cursor ?? '' : ''
-  })
-  document.addEventListener('pointerleave', () => html.classList.remove('has-cursor'))
-  document.addEventListener('pointerenter', () => html.classList.add('has-cursor'))
 }
 
 /* ---------------- Formulário ---------------- */

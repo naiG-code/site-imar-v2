@@ -2,11 +2,10 @@
 import { metodo, porqueEJ } from '../data/conteudo'
 ---
 
-<section class="section metodo" id="metodo" data-depth-mark="1800">
+<section class="section metodo" id="metodo">
   <div class="wrap">
     <div class="metodo__why">
       <div>
-        <p class="eyebrow"><b>03</b> Como trabalhamos · −1.800 m</p>
         <h2 class="h2" data-split>Por que contratar uma <em>Empresa Júnior?</em></h2>
         <p class="lead" data-reveal>Contratar uma EJ é apoiar o Movimento Empresa Júnior, que forma universitários capazes e comprometidos por meio da educação empreendedora.</p>
       </div>
@@ -78,7 +77,7 @@ import { metodo, porqueEJ } from '../data/conteudo'
   .step.is-on { opacity: 1; }
   .step__dot {
     position: absolute; left: -51px; top: 6px; width: 16px; height: 16px; border-radius: 50%;
-    background: color-mix(in oklab, var(--bg-0), var(--bg-1) calc(var(--depth) * 100%)); border: 2px solid var(--line-2);
+    background: var(--bg-0); border: 2px solid var(--line-2);
     transition: border-color .5s, box-shadow .5s, background-color .5s;
   }
   .step.is-on .step__dot { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent), 0 0 24px var(--accent); }

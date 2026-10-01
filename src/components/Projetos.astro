@@ -5,17 +5,16 @@ import { projetos, parceiros } from '../data/conteudo'
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
 ---
 
-<section class="section projetos" id="projetos" data-depth-mark="2400">
+<section class="section projetos" id="projetos">
   <div class="wrap">
-    <p class="eyebrow"><b>04</b> Registro de campo · −2.400 m</p>
     <h2 class="h2" data-split>Ciência aplicada, perto da <em>comunidade</em> e do mar.</h2>
 
     <div class="proj__list">
       {projetos.map((p, i) => (
         <article class:list={['proj', { 'proj--flip': i % 2 === 1 }]}>
-          <figure class="proj__media" data-wave-reveal data-cursor="Projeto">
+          <figure class="proj__media" data-wave-reveal>
             {p.imagem ? (
-              <img src={`${base}${p.imagem}`} alt={p.alt ?? ''} loading="lazy" data-parallax="-10" />
+              <img src={`${base}${p.imagem}`} alt={p.alt ?? ''} loading="lazy" />
             ) : (
               <div class="proj__art" aria-hidden="true">
                 <svg viewBox="0 0 400 300" preserveAspectRatio="none">
@@ -50,7 +49,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
   .proj--flip .proj__media { order: 2; }
 
   .proj__media { margin: 0; position: relative; aspect-ratio: 16 / 11; border-radius: var(--radius); overflow: hidden; background: var(--card); }
-  .proj__media img { width: 100%; height: 120%; object-fit: cover; }
+  .proj__media img { width: 100%; height: 100%; object-fit: cover; }
   .proj__art {
     position: absolute; inset: 0; display: grid; place-items: center;
     background: radial-gradient(120% 120% at 20% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
