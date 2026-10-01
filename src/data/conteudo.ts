@@ -106,7 +106,20 @@ export const projetos: {
   },
 ]
 
-export const parceiros = ['Cultura Inglesa', 'IPT', 'IO Jr.', 'Unifesp', 'Instituto do Mar', 'Movimento Empresa Júnior']
+/*
+ * Quem já navegou com a gente (faixa de logos logo abaixo do topo).
+ * Para colocar um logo: salve o arquivo em public/img/parceiros/ (de preferência
+ * .svg ou .png com fundo transparente) e preencha `logo`, ex.: logo: 'img/parceiros/ambev.svg'
+ * Sem `logo`, aparece o nome escrito.
+ */
+export const parceiros: { nome: string; logo?: string }[] = [
+  { nome: 'Ambev' }, // TODO: logo
+  { nome: 'Bloom' }, // TODO: logo
+  { nome: 'Unifesp' }, // TODO: logo
+  { nome: 'Cultura Inglesa' }, // TODO: logo
+  { nome: 'IPT' }, // TODO: logo
+  { nome: 'IO Jr.' }, // TODO: logo
+]
 
 export const ods = [
   { numero: 4, cor: '#C5192D', titulo: 'Educação de qualidade', texto: 'Palestras, aulas e feiras de educação ambiental para escolas e empresas.' },

@@ -1,0 +1,60 @@
+---
+/* Faixa "Quem já navegou com a gente": logos rolando devagar. Edite em src/data/conteudo.ts */
+import { parceiros } from '../data/conteudo'
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+// Repete a lista para a faixa nunca ficar vazia em telas largas
+const faixa = Array.from({ length: Math.max(2, Math.ceil(12 / parceiros.length)) }, () => parceiros).flat()
+---
+
+<section class="parc" aria-labelledby="parc-titulo">
+  <h2 class="parc__titulo wrap" id="parc-titulo">Quem já navegou com a gente</h2>
+  <ul class="sr-only">{parceiros.map((p) => <li>{p.nome}</li>)}</ul>
+  <div class="parc__mask" aria-hidden="true">
+    {[0, 1].map(() => (
+      <div class="parc__grupo">
+        {faixa.map((p) => (
+          <span class="parc__item">
+            {p.logo ? <img src={`${base}${p.logo}`} alt="" loading="lazy" /> : <span class="parc__nome">{p.nome}</span>}
+          </span>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .parc { position: relative; z-index: 2; padding: clamp(40px, 6vw, 72px) 0; border-bottom: 1px solid var(--line); }
+  .parc__titulo {
+    margin-block: 0 28px; font-family: var(--mono); font-weight: 500; font-size: 12px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-align: center;
+  }
+  .parc__mask {
+    display: flex; overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .parc__grupo { display: flex; flex-shrink: 0; animation: parc-rola 40s linear infinite; }
+  .parc__mask:hover .parc__grupo { animation-play-state: paused; }
+  @keyframes parc-rola { to { transform: translateX(-100%); } }
+
+  .parc__item { display: grid; place-items: center; height: 56px; padding: 0 clamp(28px, 4vw, 56px); }
+  /* Logos ficam monocromáticos (brancos no escuro, pretos no claro) para combinar com o site */
+  .parc__item img {
+    height: 40px; width: auto; max-width: 160px; object-fit: contain;
+    filter: grayscale(1) brightness(0) invert(1); opacity: .7; transition: filter .4s, opacity .4s;
+  }
+  .parc__item:hover img { opacity: 1; }
+  :global([data-theme='light']) .parc__item img { filter: grayscale(1) brightness(0); }
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme='dark'])) .parc__item img { filter: grayscale(1) brightness(0); }
+  }
+  .parc__nome {
+    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1; font-weight: 500;
+    font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -.03em; white-space: nowrap; color: var(--muted);
+    transition: color .3s;
+  }
+  .parc__item:hover .parc__nome { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) { .parc__grupo { animation: none; } }
+</style>
