@@ -248,7 +248,7 @@ function palavrasNoScroll() {
     gsap.fromTo(
       split.words,
       { opacity: 0.14 },
-      { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } },
+      { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 60%', scrub: true } },
     )
   })
 }
