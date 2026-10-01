@@ -32,25 +32,44 @@ export const sobre = {
     'Ser referência na formação de líderes capacitados e na excelência em soluções sustentáveis, consolidando a IMar Jr. como referência em sustentabilidade no litoral paulista.',
 }
 
-/** Para quem trabalhamos. `servicos` usa os `id` de servicos.ts. */
+/*
+ * Para quem trabalhamos (filtro da seção de Serviços).
+ * `frase` completa o título "Soluções ambientais para ___".
+ * `servicos` usa os `id` de servicos.ts.
+ */
 export const publicos = [
   {
-    nome: 'Empresas',
-    texto: 'Reduza custos e riscos, cumpra a legislação e mostre ao mercado o seu compromisso ESG.',
-    servicos: ['consultoria-esg', 'pgrs', 'licenciamento'],
+    id: 'todos',
+    nome: 'Todos',
+    frase: 'o seu negócio',
+    texto: 'Seis frentes de atuação, uma mesma base: a ciência do Instituto do Mar aplicada à sua realidade.',
+    servicos: [] as string[], // vazio = mostra todos os serviços
   },
   {
+    id: 'empresas',
+    nome: 'Empresas',
+    frase: 'a sua empresa',
+    texto: 'Reduza custos e riscos, cumpra a legislação e mostre ao mercado o seu compromisso ESG.',
+    servicos: ['consultoria-esg', 'pgrs', 'licenciamento', 'personalizado'],
+  },
+  {
+    id: 'escolas',
     nome: 'Escolas',
+    frase: 'a sua escola',
     texto: 'Feiras, aulas e oficinas que fazem alunos e professores se apaixonarem pelo oceano.',
     servicos: ['educacao-ambiental', 'personalizado'],
   },
   {
+    id: 'eventos',
     nome: 'Eventos',
+    frase: 'o seu evento',
     texto: 'Eventos com menos resíduo e mais propósito, do coffee break à destinação final.',
-    servicos: ['coffee-break', 'pgrs', 'educacao-ambiental'],
+    servicos: ['coffee-break', 'pgrs', 'educacao-ambiental', 'consultoria-esg'],
   },
   {
+    id: 'organizacoes',
     nome: 'Organizações',
+    frase: 'a sua organização',
     texto: 'ONGs, associações e poder público com projetos sob medida e base científica.',
     servicos: ['personalizado', 'educacao-ambiental', 'consultoria-esg'],
   },

@@ -3,24 +3,43 @@ import Icon from './Icon.astro'
 import { servicos } from '../data/servicos'
 import { publicos } from '../data/conteudo'
 
-const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
+// Para cada serviço, a lista de públicos que ele atende (usada pelo filtro)
+const publicosDe = (id: string) =>
+  publicos.filter((p) => p.servicos.includes(id)).map((p) => p.id).join(' ')
+const todos = publicos[0]
 ---
 
 <section class="servicos" id="servicos">
-  <div class="wrap">
+  <div class="wrap" data-filtro>
     <header class="servicos__head">
-      <h2 class="h2" data-split>Soluções ambientais para o seu <em>negócio</em> ou evento.</h2>
+      <h2 class="h2 servicos__titulo" data-reveal>
+        Soluções ambientais para <span class="servicos__frase"><em data-filtro-frase>{todos.frase}</em></span>
+      </h2>
       <div class="car__arrows">
         <button type="button" class="car__arrow" data-car-prev aria-label="Serviço anterior"><Icon name="seta" size={20} /></button>
         <button type="button" class="car__arrow" data-car-next aria-label="Próximo serviço"><Icon name="seta" size={20} /></button>
       </div>
     </header>
+
+    <div class="filtro" data-reveal>
+      <p class="filtro__label" id="filtro-label">Você é</p>
+      <div class="filtro__pills" role="radiogroup" aria-labelledby="filtro-label">
+        {publicos.map((p, i) => (
+          <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} class:list={['filtro__pill', { 'is-on': i === 0 }]}
+            data-filtro-btn={p.id} data-frase={p.frase} data-texto={p.texto} data-servicos={p.servicos.join(' ')}>
+            {p.nome}
+          </button>
+        ))}
+        <span class="filtro__blob" data-filtro-blob aria-hidden="true"></span>
+      </div>
+      <p class="filtro__texto" data-filtro-texto aria-live="polite">{todos.texto}</p>
+    </div>
   </div>
 
   <div class="car" data-carousel aria-roledescription="carrossel" aria-label="Serviços">
     <div class="car__track" data-car-track>
       {servicos.map((s, i) => (
-        <article class:list={['svc', { 'is-on': i === 0 }]} data-svc aria-roledescription="slide" aria-label={`${i + 1} de ${servicos.length}: ${s.titulo}`}>
+        <article class:list={['svc', { 'is-on': i === 0 }]} data-svc data-id={s.id} data-publicos={publicosDe(s.id)} aria-roledescription="slide" aria-label={`${i + 1} de ${servicos.length}: ${s.titulo}`}>
           <svg class="svc__art" viewBox="0 0 120 120" aria-hidden="true" data-draw>
             {s.icone === 'onda' && (
               <>
@@ -81,40 +100,19 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
   <div class="wrap">
     <div class="car__dots" role="tablist" aria-label="Escolher serviço">
       {servicos.map((s, i) => (
-        <button type="button" role="tab" class:list={['car__dot', { 'is-on': i === 0 }]} data-car-dot={i} aria-label={s.titulo} aria-selected={i === 0 ? 'true' : 'false'}>
+        <button type="button" role="tab" class:list={['car__dot', { 'is-on': i === 0 }]} data-car-dot={i} data-id={s.id} aria-label={s.titulo} aria-selected={i === 0 ? 'true' : 'false'}>
           <span>{s.titulo}</span><i><b></b></i>
         </button>
       ))}
     </div>
   </div>
 
-  <div class="wrap publicos" data-pub>
-    <p class="publicos__title">Para quem a gente trabalha</p>
-    <div class="publicos__box">
-      <div class="publicos__tabs" role="tablist" aria-label="Para quem a gente trabalha">
-        {publicos.map((p, i) => (
-          <button type="button" role="tab" id={`pub-tab-${i}`} aria-controls={`pub-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'}
-            class:list={['pub__tab', { 'is-on': i === 0 }]} data-pub-tab={i}>
-            {p.nome}<i aria-hidden="true"><b></b></i>
-          </button>
-        ))}
-      </div>
-      <div class="publicos__panels">
-        {publicos.map((p, i) => (
-          <div role="tabpanel" id={`pub-panel-${i}`} aria-labelledby={`pub-tab-${i}`} class:list={['pub__panel', { 'is-on': i === 0 }]} data-pub-panel={i} hidden={i !== 0}>
-            <p>{p.texto}</p>
-            <ul>{p.servicos.map((id) => <li><a href="#contato" data-servico={id}>{nomeServico[id]} <Icon name="seta" size={14} /></a></li>)}</ul>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
 </section>
 
 <style>
   .servicos { position: relative; z-index: 2; padding-top: clamp(96px, 12vw, 160px); }
   .servicos__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: clamp(32px, 4vw, 56px); }
-  .servicos__head .h2 { max-width: 13ch; margin: 0; }
+  .servicos__head .h2 { margin: 0; }
 
   .car__arrows { display: flex; gap: 10px; flex-shrink: 0; }
   .car__arrow {
@@ -194,43 +192,35 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
   }
 
   /* ---------- Para quem ---------- */
-  .publicos { padding-top: clamp(96px, 12vw, 160px); }
-  .publicos__title {
-    margin: 0 0 28px; font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
-  }
-  .publicos__box { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  /* ---------- Filtro "Você é" ---------- */
+  .servicos__titulo { max-width: 20ch; }
+  .servicos__frase { display: inline-block; }
+  .servicos__frase em { display: inline-block; }
 
-  /* Nomes grandes: só o ativo fica aceso */
-  .publicos__tabs { display: grid; }
-  .pub__tab {
-    position: relative; display: block; width: fit-content; padding: 10px 0; border: 0; background: none; cursor: pointer; text-align: left;
-    font-family: var(--display); font-weight: 700; font-size: clamp(38px, 5.6vw, 84px); line-height: 1.05; letter-spacing: -.03em;
-    color: var(--line-2); transition: color .5s var(--ease-out), transform .6s var(--ease-out);
+  .filtro { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px; margin-bottom: clamp(28px, 3vw, 44px); }
+  .filtro__label { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .filtro__pills {
+    position: relative; display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card);
   }
-  .pub__tab:hover { color: var(--muted); }
-  .pub__tab.is-on { color: var(--ink); transform: translateX(14px); }
-  .pub__tab i { position: absolute; left: 0; bottom: 4px; width: 100%; height: 2px; background: var(--line); overflow: hidden; opacity: 0; transition: opacity .4s; }
-  .pub__tab.is-on i { opacity: 1; }
-  .pub__tab b { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); }
-
-  .publicos__panels { display: grid; }
-  .pub__panel { grid-area: 1 / 1; }
-  .pub__panel p { margin: 0 0 24px; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; max-width: 34ch; }
-  .pub__panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .pub__panel a {
-    display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line-2);
-    font-size: 14px; font-weight: 600; text-decoration: none; transition: background-color .3s, color .3s, border-color .3s;
+  .filtro__pill {
+    position: relative; z-index: 1; padding: 10px 18px; border: 0; border-radius: 999px; background: none; cursor: pointer;
+    font-size: 14px; font-weight: 600; color: var(--muted); transition: color .4s;
   }
-  .pub__panel a:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .filtro__pill:hover { color: var(--ink); }
+  .filtro__pill.is-on { color: var(--on-accent); }
+  /* "Bolha" que desliza até o público escolhido */
+  .filtro__blob {
+    position: absolute; z-index: 0; left: 0; top: 0; border-radius: 999px; background: var(--accent);
+    transition: transform .6s var(--ease-out), width .6s var(--ease-out), height .6s var(--ease-out);
+  }
+  :global(html:not(.js)) .filtro__pill.is-on { background: var(--accent); }
+  .filtro__texto { flex-basis: 100%; margin: 0; color: var(--muted); max-width: 60ch; }
 
-  @media (max-width: 860px) {
-    .publicos__box { grid-template-columns: 1fr; align-items: start; }
-    .publicos__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pub__tab {
-      width: auto; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line-2);
-      font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: 0; color: var(--muted);
-    }
-    .pub__tab.is-on { transform: none; background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-    .pub__tab i { display: none; }
+  .svc.is-out { display: none; }
+  .car__dot.is-out { display: none; }
+
+  @media (max-width: 760px) {
+    .filtro__pills { border-radius: 22px; }
   }
 </style>

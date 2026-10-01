@@ -23,7 +23,6 @@ export function iniciar() {
   formulario()
   oceano()
   carrossel()
-  publicos()
 
   if (reduzido) {
     html.classList.add('hero-ready')
@@ -279,13 +278,15 @@ function letreiros() {
   })
 }
 
-/* ---------------- Serviços: carrossel ---------------- */
+/* ---------------- Serviços: carrossel + filtro "Você é" ---------------- */
 function carrossel() {
   const track = $('[data-car-track]')
   if (!track) return
-  const cards = $$('[data-svc]', track)
-  const dots = $$<HTMLButtonElement>('[data-car-dot]')
+  const todosCards = $$('[data-svc]', track)
+  const todosDots = $$<HTMLButtonElement>('[data-car-dot]')
   const tempo = 6 // segundos em cada serviço
+  let cards = todosCards
+  let dots = todosDots
   let atual = 0
   let timer: gsap.core.Tween | null = null
   let visivel = false
@@ -307,13 +308,14 @@ function carrossel() {
       d.setAttribute('aria-selected', String(k === i))
       gsap.set($('b', d), { clearProps: 'transform' })
     })
-    desenhar(cards[i])
+    if (cards[i]) desenhar(cards[i])
     reiniciarTimer()
   }
 
-  const ir = (i: number) => {
+  const ir = (i: number, instantaneo = false) => {
+    if (!cards.length) return
     const n = (i + cards.length) % cards.length
-    track.scrollTo({ left: cards[n].offsetLeft - cards[0].offsetLeft })
+    track.scrollTo({ left: cards[n].offsetLeft - cards[0].offsetLeft, behavior: instantaneo ? 'auto' : 'smooth' })
     ativar(n)
   }
 
@@ -321,7 +323,7 @@ function carrossel() {
   const reiniciarTimer = () => {
     timer?.kill()
     timer = null
-    if (reduzido) return
+    if (reduzido || cards.length < 2) return
     const barra = $('b', dots[atual])
     timer = gsap.fromTo(barra, { scaleX: 0 }, { scaleX: 1, duration: tempo, ease: 'none', paused: !visivel || pausado, onComplete: () => ir(atual + 1) })
   }
@@ -329,81 +331,81 @@ function carrossel() {
 
   $('[data-car-prev]')?.addEventListener('click', () => ir(atual - 1))
   $('[data-car-next]')?.addEventListener('click', () => ir(atual + 1))
-  dots.forEach((d, k) => d.addEventListener('click', () => ir(k)))
+  todosDots.forEach((d) => d.addEventListener('click', () => ir(dots.indexOf(d))))
 
   // Arrastar com o dedo/trackpad: descobre qual card ficou em primeiro
   let espera = 0
   track.addEventListener('scroll', () => {
     clearTimeout(espera)
     espera = window.setTimeout(() => {
+      if (cards.length < 2) return
       const passo = cards[1].offsetLeft - cards[0].offsetLeft
       const i = Math.min(cards.length - 1, Math.round(track.scrollLeft / passo))
       if (i !== atual) ativar(i)
     }, 120)
   }, { passive: true })
 
-  // Pausa com o mouse em cima ou quando a seção sai da tela
   track.addEventListener('pointerenter', () => { pausado = true; atualizarPausa() })
   track.addEventListener('pointerleave', () => { pausado = false; atualizarPausa() })
   track.addEventListener('focusin', () => { pausado = true; atualizarPausa() })
   track.addEventListener('focusout', () => { pausado = false; atualizarPausa() })
   ScrollTrigger.create({ trigger: track, start: 'top 85%', end: 'bottom top', onToggle: (st) => { visivel = st.isActive; atualizarPausa() } })
 
-  ativar(0)
-}
+  /* ----- Filtro por público ----- */
+  const botoes = $$<HTMLButtonElement>('[data-filtro-btn]')
+  const blob = $('[data-filtro-blob]')
+  const frase = $('[data-filtro-frase]')
+  const texto = $('[data-filtro-texto]')
 
-/* ---------------- Para quem: troca sozinho entre os públicos ---------------- */
-function publicos() {
-  const box = $('[data-pub]')
-  if (!box) return
-  const tabs = $$<HTMLButtonElement>('[data-pub-tab]', box)
-  const panels = $$('[data-pub-panel]', box)
-  const tempo = 4.5
-  let atual = 0
-  let timer: gsap.core.Tween | null = null
-  let visivel = false
-  let pausado = false
+  const moverBlob = (btn: HTMLElement, animar = true) => {
+    if (!blob) return
+    if (!animar) blob.style.transition = 'none'
+    blob.style.width = `${btn.offsetWidth}px`
+    blob.style.height = `${btn.offsetHeight}px`
+    blob.style.transform = `translate(${btn.offsetLeft}px, ${btn.offsetTop}px)`
+    if (!animar) requestAnimationFrame(() => (blob.style.transition = ''))
+  }
 
-  const ativar = (i: number, animar = true) => {
-    const antes = atual
-    atual = i
-    tabs.forEach((t, k) => {
-      t.classList.toggle('is-on', k === i)
-      t.setAttribute('aria-selected', String(k === i))
+  const trocarTexto = (el: HTMLElement | null, novo: string) => {
+    if (!el || el.textContent === novo) return
+    if (reduzido) return void (el.textContent = novo)
+    gsap.timeline()
+      .to(el, { yPercent: -40, opacity: 0, duration: 0.25, ease: 'power2.in' })
+      .add(() => void (el.textContent = novo))
+      .fromTo(el, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'expo.out' })
+  }
+
+  const filtrar = (btn: HTMLButtonElement, animar = true) => {
+    botoes.forEach((b) => {
+      b.classList.toggle('is-on', b === btn)
+      b.setAttribute('aria-checked', String(b === btn))
     })
-    panels.forEach((p, k) => {
-      p.hidden = k !== i
-      p.classList.toggle('is-on', k === i)
-    })
-    if (animar && !reduzido && antes !== i) {
-      gsap.fromTo(panels[i].children, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', stagger: 0.08 })
+    moverBlob(btn, animar)
+    trocarTexto(frase, btn.dataset.frase ?? '')
+    trocarTexto(texto, btn.dataset.texto ?? '')
+
+    const ids = (btn.dataset.servicos ?? '').split(' ').filter(Boolean)
+    const passa = (id?: string) => !ids.length || ids.includes(id ?? '')
+    todosCards.forEach((c) => c.classList.toggle('is-out', !passa(c.dataset.id)))
+    todosDots.forEach((d) => d.classList.toggle('is-out', !passa(d.dataset.id)))
+    cards = todosCards.filter((c) => !c.classList.contains('is-out'))
+    dots = todosDots.filter((d) => !d.classList.contains('is-out'))
+    ir(0, true)
+
+    if (animar && !reduzido) {
+      gsap.fromTo(cards, { x: 80, opacity: 0 }, { x: 0, opacity: (k) => (k === 0 ? 1 : 0.35), duration: 0.9, ease: 'expo.out', stagger: 0.07, clearProps: 'opacity,transform' })
     }
-    reiniciar()
   }
-  const reiniciar = () => {
-    timer?.kill()
-    timer = null
-    if (reduzido) return
-    const barra = $('b', tabs[atual])
-    timer = gsap.fromTo(barra, { scaleX: 0 }, { scaleX: 1, duration: tempo, ease: 'none', paused: !visivel || pausado, onComplete: () => ativar((atual + 1) % tabs.length) })
-  }
-  const pausa = () => (visivel && !pausado ? timer?.play() : timer?.pause())
 
-  tabs.forEach((t, k) => {
-    t.addEventListener('click', () => ativar(k))
-    t.addEventListener('keydown', (e) => {
-      const d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0
-      if (!d) return
-      e.preventDefault()
-      const n = (k + d + tabs.length) % tabs.length
-      tabs[n].focus()
-      ativar(n)
-    })
-  })
-  box.addEventListener('pointerenter', () => { pausado = true; pausa() })
-  box.addEventListener('pointerleave', () => { pausado = false; pausa() })
-  ScrollTrigger.create({ trigger: box, start: 'top 85%', end: 'bottom top', onToggle: (st) => { visivel = st.isActive; pausa() } })
-  ativar(0, false)
+  botoes.forEach((b) => b.addEventListener('click', () => filtrar(b)))
+  const inicial = botoes[0]
+  if (inicial) {
+    moverBlob(inicial, false)
+    window.addEventListener('resize', () => moverBlob(botoes.find((b) => b.classList.contains('is-on')) ?? inicial, false))
+    document.fonts.ready.then(() => moverBlob(botoes.find((b) => b.classList.contains('is-on')) ?? inicial, false))
+  }
+
+  ativar(0)
 }
 
 /* ---------------- Método: linha que se desenha ---------------- */
