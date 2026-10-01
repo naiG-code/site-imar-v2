@@ -92,6 +92,7 @@ export const metodo = [
  * Projetos em destaque.
  * Para trocar a foto: coloque o arquivo em public/img/ e mude `imagem`.
  * Sem `imagem`, o card mostra uma arte de ondas.
+ * Se a foto for vertical, ajuste `foco` para escolher a parte que aparece no card.
  */
 export const projetos: {
   tag: string
@@ -101,15 +102,20 @@ export const projetos: {
   parceiros: string
   imagem?: string
   alt?: string
+  /** Qual parte da foto aparece quando ela é cortada (ex.: '50% 80%' = centro, mais para baixo). */
+  foco?: string
 }[] = [
   {
     tag: 'Educação Ambiental',
     titulo: 'Feira de Educação Ambiental',
     local: 'Cultura Inglesa',
-    // TODO: conteúdo real — confirmar texto, cidade, público e colocar foto da feira
+    // TODO: conteúdo real — confirmar texto, cidade e público
     texto:
       'Em parceria com a Cultura Inglesa, levamos o oceano para dentro da escola: uma feira de educação ambiental com estações interativas, experimentos e muita conversa sobre o mar e o consumo consciente.',
     parceiros: 'Parceria · Cultura Inglesa',
+    imagem: 'img/feira-cultura-inglesa.jpg',
+    alt: 'Equipe da IMar Júnior na Cultura Inglesa segurando o painel "O oceano em nossas mãos" com marcas de mãos azuis',
+    foco: '50% 78%',
   },
   {
     tag: 'Comunidade',
