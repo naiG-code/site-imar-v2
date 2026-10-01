@@ -24,7 +24,6 @@ export function iniciar() {
   tema()
   navegacao()
   menuMobile()
-  relogio()
   formulario()
 
   // O oceano 3D (Three.js) é carregado à parte para não atrasar o resto da página
@@ -238,16 +237,6 @@ function profundidade(cb: (p: number, heroP: number) => void) {
   atualizar()
 }
 
-/* ---------------- Relógio do HUD ---------------- */
-function relogio() {
-  const el = $('[data-clock]')
-  if (!el) return
-  const fmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' })
-  const tick = () => (el.textContent = fmt.format(new Date()))
-  tick()
-  setInterval(tick, 1000)
-}
-
 /* ---------------- Preloader ---------------- */
 function preloader(): Promise<void> {
   const pre = $('[data-preloader]')
@@ -294,7 +283,6 @@ function entradaHero() {
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
   tl.fromTo('.hero__in', { y: 0, yPercent: 110, rotate: 3 }, { y: 0, yPercent: 0, rotate: 0, duration: 1.5, stagger: 0.12 }, 0.15)
     .fromTo('[data-hero-in]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.2, stagger: 0.1 }, 0.5)
-    .fromTo('.hero__hud', { opacity: 0 }, { opacity: 1, duration: 1 }, 0.8)
   rotador()
 }
 

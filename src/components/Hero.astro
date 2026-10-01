@@ -1,21 +1,14 @@
 ---
 import Icon from './Icon.astro'
 import { hero } from '../data/conteudo'
-import { site } from '../data/site'
 ---
 
 <section class="hero" id="topo" data-hero>
   <canvas class="hero__ocean" data-ocean aria-hidden="true"></canvas>
   <div class="hero__veil" aria-hidden="true"></div>
 
-  <div class="hero__hud wrap" aria-hidden="true">
-    <span>23°58′S · 46°19′W</span>
-    <span class="hero__hud-mid"><i class="pulse"></i> Sinal ativo · <span data-clock>--:--</span> UTC−3</span>
-    <span>Est. {site.fundacao}</span>
-  </div>
 
   <div class="hero__content wrap">
-    <p class="eyebrow" data-hero-in>{hero.selo}</p>
     <h1 class="display hero__title" data-hero-title>
       <span class="hero__line"><span class="hero__in">{hero.linha1}</span></span>
       <span class="hero__line"><span class="hero__in">
@@ -55,20 +48,6 @@ import { site } from '../data/site'
       linear-gradient(to bottom, transparent 55%, var(--bg-0));
   }
 
-  .hero__hud {
-    position: absolute; top: 96px; left: 0; right: 0; z-index: 2;
-    display: flex; justify-content: space-between; gap: 16px;
-    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
-  }
-  .hero__hud-mid { display: inline-flex; align-items: center; gap: 8px; }
-  .pulse {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 0 0 var(--accent); animation: pulse 2.2s infinite;
-  }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); }
-    100% { box-shadow: 0 0 0 12px transparent; }
-  }
 
   .hero__content { position: relative; z-index: 2; }
   .hero__title { font-size: clamp(46px, 8.8vw, 156px); margin-bottom: clamp(32px, 4vw, 56px); }
@@ -105,10 +84,9 @@ import { site } from '../data/site'
 
   @media (max-width: 860px) {
     .hero__bottom { grid-template-columns: 1fr; }
-    .hero__hud-mid, .hero__scroll { display: none; }
+    .hero__scroll { display: none; }
   }
   @media (max-width: 520px) {
-    .hero__hud span:last-child { display: none; }
     .hero__ctas .btn { flex: 1 1 100%; }
   }
 </style>

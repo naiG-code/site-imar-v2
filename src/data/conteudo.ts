@@ -3,7 +3,6 @@
  */
 
 export const hero = {
-  selo: 'Empresa Júnior · Instituto do Mar · Unifesp',
   /** A palavra em itálico troca sozinha entre as opções abaixo. */
   linha1: 'Soluções sustentáveis',
   linha2: 'com a',
