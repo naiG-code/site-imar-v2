@@ -1,5 +1,4 @@
 ---
-import Marquee from './Marquee.astro'
 import { projetos } from '../data/conteudo'
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
@@ -38,17 +37,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
   </div>
 
 
-  <div class="proj__valores">
-    <p class="wrap proj__valores-label">Nossos valores</p>
-    <Marquee />
-  </div>
 </section>
 
 <style>
-  .proj__valores { margin-top: clamp(96px, 12vw, 180px); }
-  .proj__valores-label {
-    margin-bottom: 18px; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
-  }
   .proj__list { display: grid; gap: clamp(80px, 10vw, 160px); margin-top: clamp(56px, 7vw, 100px); }
   .proj { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
   .proj--flip .proj__media { order: 2; }

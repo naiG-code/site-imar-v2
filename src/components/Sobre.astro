@@ -1,11 +1,11 @@
 ---
 import { sobre, valores } from '../data/conteudo'
-import { site, anosDeAtuacao } from '../data/site'
+import { anosDeAtuacao } from '../data/site'
 import { servicos } from '../data/servicos'
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
 const numeros = [
-  { valor: site.fundacao, rotulo: 'ano de fundação', sem: true },
+  { valor: 30, prefixo: '+', rotulo: 'projetos realizados' }, // TODO: atualizar quando passar de 30
   { valor: anosDeAtuacao(), rotulo: 'anos de atuação' },
   { valor: sobre.cursos.length, rotulo: 'cursos do Instituto do Mar' },
   { valor: servicos.length, rotulo: 'frentes de serviço' },
@@ -48,7 +48,7 @@ const numeros = [
       {numeros.map((n) => (
         <div data-reveal>
           <dt>{n.rotulo}</dt>
-          <dd><span data-count={n.valor} data-count-plain={n.sem ? '' : undefined}>{n.valor}</span></dd>
+          <dd>{n.prefixo}<span data-count={n.valor}>{n.valor}</span></dd>
         </div>
       ))}
     </dl>

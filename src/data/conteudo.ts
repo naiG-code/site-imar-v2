@@ -18,7 +18,6 @@ export const sobre = {
   titulo: 'Estudantes do mar, trabalhando em terra firme.',
   texto: [
     'Fundada em 2015, a IMar Júnior é vinculada ao Instituto do Mar da Universidade Federal de São Paulo, no campus Baixada Santista.',
-    'Nosso propósito é fomentar a interdisciplinaridade, formar jovens empreendedores, estimular a inovação e promover a sustentabilidade em cada projeto.',
   ],
   cursos: [
     { sigla: 'BICT', nome: 'Ciência e Tecnologia do Mar' },

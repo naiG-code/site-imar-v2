@@ -33,7 +33,6 @@ export function iniciar() {
   }
 
   entradaHero()
-  letreiros()
   magneticos()
   document.fonts.ready.then(() => {
     titulos()
@@ -253,8 +252,7 @@ function revelarImagens() {
 function contadores(imediato: boolean) {
   $$('[data-count]').forEach((el) => {
     const fim = Number(el.dataset.count)
-    // Ano de fundação não "conta", só aparece
-    if (imediato || el.dataset.countPlain !== undefined) return void (el.textContent = String(fim))
+    if (imediato) return void (el.textContent = String(fim))
     const n = { v: 0 }
     el.textContent = '0'
     gsap.to(n, {
@@ -264,17 +262,6 @@ function contadores(imediato: boolean) {
       scrollTrigger: { trigger: el, start: 'top 90%', once: true },
       onUpdate: () => (el.textContent = String(Math.round(n.v))),
     })
-  })
-}
-
-/* ---------------- Letreiros (marquee) ---------------- */
-function letreiros() {
-  $$('[data-marquee]').forEach((m) => {
-    const track = $('[data-marquee-track]', m)!
-    const ida = Number(m.dataset.dir) !== -1
-    const tween = gsap.fromTo(track, { xPercent: ida ? 0 : -50 }, { xPercent: ida ? -50 : 0, duration: 50, ease: 'none', repeat: -1 })
-    // Só anima quando está visível na tela
-    ScrollTrigger.create({ trigger: m, start: 'top bottom', end: 'bottom top', onToggle: (st) => (st.isActive ? tween.play() : tween.pause()) })
   })
 }
 
