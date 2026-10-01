@@ -1,0 +1,188 @@
+---
+/*
+ * Página interna (não aparece no menu): opções de identidade visual
+ * para a diretoria escolher. Acesse em /identidade
+ */
+import Base from '../layouts/Base.astro'
+import '@fontsource-variable/syne/index.css'
+import '@fontsource/instrument-serif/400.css'
+import '@fontsource/instrument-serif/400-italic.css'
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+
+const destaques = [
+  { id: 'bio', nome: 'Bioluminescência', hex: '#3DF2C9', claro: '#087A64', texto: 'O brilho de organismos do mar profundo. Contrasta com os azuis sem brigar com eles. É a cor que está no site.', padrao: true },
+  { id: 'agua-viva', nome: 'Água-viva', hex: '#B79CFF', claro: '#6A4FD1', texto: 'Lilás translúcido das águas-vivas. Mais ousado e memorável, foge do "verde sustentável" comum.' },
+  { id: 'areia', nome: 'Areia', hex: '#F2D49B', claro: '#8A6A1F', texto: 'O dourado da praia na maré baixa. Quente e acolhedor, o mais próximo do laranja da v1 sem ser laranja.' },
+  { id: 'espuma', nome: 'Espuma', hex: '#9EF0FF', claro: '#0A7FA0', texto: 'Ciano claro da arrebentação. Monocromático e elegante, mantém tudo na família dos azuis.' },
+]
+
+const fontes = [
+  { id: 'fraunces', nome: 'Fraunces', familia: "'Fraunces Variable', serif", estilo: "font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144", texto: 'Serifada macia e "ondulada", com itálico que parece escrito à mão. Fluida, elegante e cheia de personalidade. É a fonte que está no site.', padrao: true },
+  { id: 'instrument', nome: 'Instrument Serif', familia: "'Instrument Serif', serif", estilo: '', texto: 'Serifada editorial fina, com cara de revista científica de luxo. Muito sofisticada em tamanhos grandes.' },
+  { id: 'syne', nome: 'Syne', familia: "'Syne Variable', sans-serif", estilo: 'font-weight:700', texto: 'Sem serifa expandida e geométrica, na linha da JrFei. Mais "tech" e impactante, menos orgânica.' },
+]
+---
+
+<Base title="Identidade visual · IMar Júnior v2">
+  <main class="id" id="conteudo" data-board>
+    <header class="wrap id__head">
+      <a class="id__back" href={base}>← Voltar ao site</a>
+      <p class="eyebrow">Proposta de identidade · v2</p>
+      <h1 class="h2">Opções para a <em>nova cara</em> da IMar.</h1>
+      <p class="lead">Escolha uma cor de destaque e uma fonte de título. A prévia abaixo muda na hora. Os azuis do logo continuam sendo a base de tudo.</p>
+    </header>
+
+    <section class="wrap id__preview" aria-label="Prévia">
+      <div class="prev" data-prev>
+        <img src={`${base}img/logo-mark.png`} alt="" width="64" height="64" />
+        <p class="prev__eyebrow">Empresa Júnior · Instituto do Mar</p>
+        <p class="prev__title">Soluções sustentáveis com a <em>profundidade</em> do oceano.</p>
+        <div class="prev__row">
+          <span class="prev__btn">Solicitar diagnóstico ↗</span>
+          <span class="prev__chip">Educação Ambiental</span>
+          <span class="prev__chip">Consultoria ESG</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap id__block">
+      <h2 class="h3">1 · Cor de destaque <span class="muted">(substitui o laranja)</span></h2>
+      <div class="opts">
+        {destaques.map((d) => (
+          <button class:list={['opt', { 'is-on': d.padrao }]} type="button" data-accent={d.hex} data-accent-light={d.claro}>
+            <span class="opt__sw" style={`--a:${d.hex};--b:${d.claro}`}><i></i><i></i></span>
+            <b>{d.nome}{d.padrao && <small> · atual</small>}</b>
+            <code>{d.hex}</code>
+            <span class="muted">{d.texto}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <section class="wrap id__block">
+      <h2 class="h3">2 · Fonte dos títulos</h2>
+      <div class="opts opts--3">
+        {fontes.map((f) => (
+          <button class:list={['opt', { 'is-on': f.padrao }]} type="button" data-font={f.familia} data-font-style={f.estilo}>
+            <span class="opt__spec" style={`font-family:${f.familia};${f.estilo}`}>Aa <i>mar</i></span>
+            <b>{f.nome}{f.padrao && <small> · atual</small>}</b>
+            <span class="muted">{f.texto}</span>
+          </button>
+        ))}
+      </div>
+      <p class="muted id__note">Textos corridos: <b>Manrope</b>. Rótulos técnicos (coordenadas, profundidade): <b>JetBrains Mono</b>, herança da v1.</p>
+    </section>
+
+    <section class="wrap id__block">
+      <h2 class="h3">3 · Paleta base</h2>
+      <div class="pal">
+        {[
+          ['Abismo', '#01060E'], ['Oceano', '#0A2C52'], ['Onda', '#3B8FD9'], ['Céu d’água', '#8CC8F0'], ['Espuma', '#EAF4FB'], ['Superfície', '#F5FAFE'],
+        ].map(([n, h]) => (
+          <div class="pal__c" style={`--c:${h}`}><i></i><b>{n}</b><code>{h}</code></div>
+        ))}
+      </div>
+    </section>
+
+    <section class="wrap id__block id__how">
+      <h2 class="h3">Como aplicar a escolha no site</h2>
+      <p class="muted">Abra <code>src/styles/global.css</code> e troque as variáveis <code>--accent</code> e <code>--accent-ink</code> (modo escuro, no topo) e as mesmas no bloco do modo claro, usando a cor clara indicada no card. Para a fonte, troque <code>--display</code> e importe o pacote da fonte escolhida. Se preferir, é só me dizer qual combinação escolheram que eu aplico.</p>
+      <p class="muted" data-escolha></p>
+    </section>
+  </main>
+</Base>
+
+<script>
+  const board = document.querySelector<HTMLElement>('[data-board]')!
+  const escolha = document.querySelector<HTMLElement>('[data-escolha]')!
+  const light = () =>
+    document.documentElement.dataset.theme === 'light' ||
+    (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: light)').matches)
+
+  let acc = { hex: '#3DF2C9', claro: '#087A64', nome: 'Bioluminescência' }
+  let font = 'Fraunces'
+  const resumo = () => (escolha.innerHTML = `Seleção atual: <b>${acc.nome}</b> (${acc.hex} / ${acc.claro}) + <b>${font}</b>`)
+
+  const aplicarCor = () => {
+    board.style.setProperty('--accent', light() ? acc.claro : acc.hex)
+    board.style.setProperty('--accent-ink', light() ? acc.claro : acc.hex)
+  }
+  document.querySelectorAll<HTMLButtonElement>('[data-accent]').forEach((b) =>
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-accent]').forEach((x) => x.classList.remove('is-on'))
+      b.classList.add('is-on')
+      acc = { hex: b.dataset.accent!, claro: b.dataset.accentLight!, nome: b.querySelector('b')!.firstChild!.textContent! }
+      aplicarCor()
+      resumo()
+    }),
+  )
+  document.querySelectorAll<HTMLButtonElement>('[data-font]').forEach((b) =>
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-font]').forEach((x) => x.classList.remove('is-on'))
+      b.classList.add('is-on')
+      const prev = document.querySelector<HTMLElement>('[data-prev] .prev__title')!
+      prev.style.cssText = `font-family:${b.dataset.font};${b.dataset.fontStyle}`
+      font = b.querySelector('b')!.firstChild!.textContent!
+      resumo()
+    }),
+  )
+  resumo()
+</script>
+
+<style>
+  .id { padding: 64px 0 120px; }
+  .id__head { margin-bottom: 48px; }
+  .id__back { display: block; width: fit-content; margin-bottom: 40px; font-family: var(--mono); font-size: 13px; text-decoration: none; color: var(--accent-ink); }
+
+  .prev {
+    position: relative; overflow: hidden; padding: clamp(28px, 5vw, 64px); border-radius: 28px;
+    background: radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--accent) 25%, transparent), transparent 60%), linear-gradient(160deg, #0a2c52, #01060e);
+    color: #eaf4fb; transition: background .6s;
+  }
+  .prev img { width: 56px; height: 56px; margin-bottom: 28px; }
+  .prev__eyebrow { margin: 0 0 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #92abc6; }
+  .prev__title {
+    margin: 0 0 32px; max-width: 14ch; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144;
+    font-size: clamp(40px, 6.5vw, 96px); line-height: .98; letter-spacing: -.035em;
+  }
+  .prev__title em { font-style: italic; color: var(--accent); }
+  .prev__row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .prev__btn { padding: 14px 22px; border-radius: 999px; background: var(--accent); color: #02121f; font-weight: 700; }
+  .prev__chip { padding: 13px 18px; border-radius: 999px; border: 1px solid rgba(140, 200, 255, .3); }
+
+  .id__block { margin-top: 72px; }
+  .id__block > .h3 { margin-bottom: 24px; }
+  .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .opts--3 { grid-template-columns: repeat(3, 1fr); }
+  .opt {
+    display: grid; align-content: start; gap: 10px; text-align: left; padding: 20px; border-radius: 20px; cursor: pointer;
+    background: var(--card); border: 1px solid var(--line); transition: border-color .3s, transform .4s var(--ease-out);
+  }
+  .opt:hover { transform: translateY(-4px); }
+  .opt.is-on { border-color: var(--accent-ink); box-shadow: 0 0 0 1px var(--accent-ink); }
+  .opt b { font-size: 17px; }
+  .opt small { font-weight: 500; color: var(--accent-ink); }
+  .opt code, .pal code, .id__how code { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .opt .muted { font-size: 14px; line-height: 1.5; }
+  .opt__sw { display: flex; height: 72px; border-radius: 12px; overflow: hidden; }
+  .opt__sw i:first-child { flex: 2; background: var(--a); }
+  .opt__sw i:last-child { flex: 1; background: var(--b); }
+  .opt__spec { font-size: 64px; line-height: 1.1; }
+  .opt__spec i { font-style: italic; color: var(--accent-ink); }
+  .id__note { margin-top: 20px; }
+
+  .pal { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .pal__c { display: grid; gap: 6px; }
+  .pal__c i { height: 96px; border-radius: 14px; background: var(--c); border: 1px solid var(--line); }
+  .pal__c b { font-size: 14px; }
+  .id__how p { max-width: 75ch; }
+
+  @media (max-width: 960px) {
+    .opts, .opts--3 { grid-template-columns: 1fr 1fr; }
+    .pal { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .opts, .opts--3 { grid-template-columns: 1fr; }
+  }
+</style>

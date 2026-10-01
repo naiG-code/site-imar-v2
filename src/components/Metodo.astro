@@ -1,0 +1,98 @@
+---
+import { metodo, porqueEJ } from '../data/conteudo'
+---
+
+<section class="section metodo" id="metodo" data-depth-mark="1800">
+  <div class="wrap">
+    <div class="metodo__why">
+      <div>
+        <p class="eyebrow"><b>03</b> Como trabalhamos · −1.800 m</p>
+        <h2 class="h2" data-split>Por que contratar uma <em>Empresa Júnior?</em></h2>
+        <p class="lead" data-reveal>Contratar uma EJ é apoiar o Movimento Empresa Júnior, que forma universitários capazes e comprometidos por meio da educação empreendedora.</p>
+      </div>
+      <div class="why">
+        {porqueEJ.map((p) => (
+          <article class="why__item" data-reveal>
+            <span class="why__sym">{p.simbolo}</span>
+            <div>
+              <h3 class="h3">{p.titulo}</h3>
+              <p class="muted">{p.texto}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="steps" data-steps>
+      <div class="steps__head">
+        <h3 class="steps__title" data-split>Do primeiro contato<br />ao <em>resultado</em>.</h3>
+      </div>
+      <ol class="steps__list">
+        <svg class="steps__line" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 2 100">
+          <line x1="1" y1="0" x2="1" y2="100" class="steps__line-bg" />
+          <line x1="1" y1="0" x2="1" y2="100" class="steps__line-fg" data-steps-line />
+        </svg>
+        {metodo.map((m, i) => (
+          <li class="step" data-step>
+            <span class="step__dot" aria-hidden="true"></span>
+            <span class="step__n">0{i + 1}</span>
+            <div>
+              <h4>{m.titulo}</h4>
+              <p>{m.texto}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .metodo__why { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); align-items: start; }
+  .why { display: grid; gap: 12px; }
+  .why__item {
+    display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center;
+    padding: 24px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--card);
+  }
+  .why__sym {
+    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 144; font-weight: 300;
+    font-size: 88px; line-height: .8; text-align: center; color: var(--accent-ink);
+  }
+  .why__item p { margin: 8px 0 0; font-size: 15.5px; }
+
+  .steps { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(40px, 7vw, 120px); margin-top: clamp(96px, 12vw, 180px); }
+  .steps__head { position: sticky; top: 140px; align-self: start; }
+  .steps__title {
+    margin: 0; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; font-weight: 400;
+    font-size: clamp(36px, 4.6vw, 72px); line-height: 1; letter-spacing: -.035em;
+  }
+  .steps__title em { font-style: italic; font-weight: 300; color: var(--accent-ink); }
+
+  .steps__list { position: relative; list-style: none; margin: 0; padding: 0 0 0 56px; display: grid; gap: clamp(56px, 8vw, 110px); }
+  .steps__line { position: absolute; left: 12px; top: 8px; bottom: 8px; width: 2px; height: calc(100% - 16px); overflow: visible; }
+  .steps__line line { stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .steps__line-bg { stroke: var(--line-2); }
+  .steps__line-fg { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 100; }
+
+  .step { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 20px; opacity: .35; transition: opacity .6s; }
+  .step.is-on { opacity: 1; }
+  .step__dot {
+    position: absolute; left: -51px; top: 6px; width: 16px; height: 16px; border-radius: 50%;
+    background: color-mix(in oklab, var(--bg-0), var(--bg-1) calc(var(--depth) * 100%)); border: 2px solid var(--line-2);
+    transition: border-color .5s, box-shadow .5s, background-color .5s;
+  }
+  .step.is-on .step__dot { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent), 0 0 24px var(--accent); }
+  .step__n { font-family: var(--mono); font-size: 13px; color: var(--accent-ink); padding-top: 6px; }
+  .step h4 {
+    margin: 0 0 10px; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 72; font-weight: 450;
+    font-size: clamp(28px, 3vw, 44px); line-height: 1.05; letter-spacing: -.03em;
+  }
+  .step p { margin: 0; color: var(--muted); max-width: 42ch; }
+
+  @media (max-width: 900px) {
+    .metodo__why, .steps { grid-template-columns: 1fr; }
+    .steps__head { position: static; }
+    .why__item { grid-template-columns: 64px 1fr; }
+    .why__sym { font-size: 64px; }
+  }
+</style>

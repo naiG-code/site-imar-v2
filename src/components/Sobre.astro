@@ -1,0 +1,114 @@
+---
+import { sobre, valores } from '../data/conteudo'
+import { site, anosDeAtuacao } from '../data/site'
+import { servicos } from '../data/servicos'
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+const numeros = [
+  { valor: site.fundacao, rotulo: 'ano de fundação', sem: true },
+  { valor: anosDeAtuacao(), rotulo: 'anos de atuação' },
+  { valor: sobre.cursos.length, rotulo: 'cursos do Instituto do Mar' },
+  { valor: servicos.length, rotulo: 'frentes de serviço' },
+]
+---
+
+<section class="section sobre" id="sobre" data-depth-mark="200">
+  <div class="wrap">
+    <p class="eyebrow"><b>01</b> Quem somos · −200 m</p>
+
+    <p class="sobre__manifesto" data-scrub-words>{sobre.manifesto}</p>
+
+    <div class="sobre__grid">
+      <figure class="sobre__photo" data-wave-reveal data-cursor="IMar">
+        <img src={`${base}img/equipe.jpg`} alt="Equipe da IMar Júnior reunida segurando a bandeira da empresa" width="1400" height="1050" loading="lazy" data-parallax="-8" />
+        <figcaption>REG_001 · Equipe IMar Jr. · Santos/SP</figcaption>
+      </figure>
+
+      <div class="sobre__text">
+        <h2 class="h2" data-split>{sobre.titulo}</h2>
+        {sobre.texto.map((t) => <p class="muted" data-reveal>{t}</p>)}
+        <ul class="sobre__cursos" data-reveal>
+          {sobre.cursos.map((c) => <li><b>{c.sigla}</b> {c.nome}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="sobre__mv">
+      <article class="card" data-reveal data-tilt>
+        <span class="tag">Missão</span>
+        <p>{sobre.missao}</p>
+      </article>
+      <article class="card" data-reveal data-tilt>
+        <span class="tag">Visão</span>
+        <p>{sobre.visao}</p>
+      </article>
+      <article class="card card--accent" data-reveal data-tilt>
+        <span class="tag">Valores</span>
+        <ul>{valores.map((v) => <li>{v}</li>)}</ul>
+      </article>
+    </div>
+
+    <dl class="sobre__nums">
+      {numeros.map((n) => (
+        <div data-reveal>
+          <dt>{n.rotulo}</dt>
+          <dd><span data-count={n.valor} data-count-plain={n.sem ? '' : undefined}>{n.valor}</span></dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .sobre__manifesto {
+    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 72;
+    font-size: clamp(30px, 4.4vw, 68px); line-height: 1.12; letter-spacing: -.03em;
+    max-width: 22ch; margin: 0 0 clamp(80px, 10vw, 140px); text-wrap: balance;
+  }
+
+  .sobre__grid {
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center;
+  }
+  .sobre__photo { position: relative; margin: 0; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 4.4; }
+  .sobre__photo img { width: 100%; height: 116%; object-fit: cover; object-position: 50% 40%; }
+  .sobre__photo figcaption {
+    position: absolute; left: 16px; bottom: 16px; padding: 8px 12px; border-radius: 999px;
+    background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .sobre__text p { margin: 0 0 18px; max-width: 52ch; }
+  .sobre__cursos { list-style: none; padding: 0; margin: 32px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .sobre__cursos li { padding: 16px 18px; background: color-mix(in oklab, var(--bg-0), var(--bg-1) calc(var(--depth) * 100%)); font-size: 14px; color: var(--muted); }
+  .sobre__cursos b { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--accent-ink); font-weight: 600; }
+
+  .sobre__mv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: clamp(80px, 10vw, 140px); }
+  .card {
+    position: relative; padding: clamp(24px, 3vw, 40px); border-radius: var(--radius);
+    background: var(--card); border: 1px solid var(--line); transform-style: preserve-3d;
+  }
+  .card p { margin: 22px 0 0; font-size: 17px; }
+  .card ul { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .card ul li {
+    font-family: var(--display); font-style: italic; font-size: 22px; letter-spacing: -.02em;
+  }
+  .card ul li:not(:last-child)::after { content: ' ·'; color: var(--accent-ink); }
+  .card--accent { background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 18%, transparent), var(--card)); }
+
+  .sobre__nums {
+    display: grid; grid-template-columns: repeat(4, 1fr); margin: clamp(64px, 8vw, 120px) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .sobre__nums div { padding: 28px 20px 0 0; }
+  .sobre__nums div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+  .sobre__nums dt { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .sobre__nums dd {
+    margin: 10px 0 0; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 144;
+    font-size: clamp(48px, 7vw, 112px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 960px) {
+    .sobre__grid, .sobre__mv { grid-template-columns: 1fr; }
+    .sobre__nums { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+    .sobre__nums div:nth-child(3) { padding-left: 0; border-left: 0; }
+  }
+</style>

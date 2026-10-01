@@ -1,0 +1,60 @@
+---
+import '../styles/global.css'
+import { site } from '../data/site'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const { title = `${site.nome} · ${site.slogan}`, description = site.descricao } = Astro.props
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const ogImage = new URL(`${base}img/equipe.jpg`, Astro.site)
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href={`${base}favicon.png`} />
+    <meta name="theme-color" content="#0a2c52" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Aplica o tema salvo antes de pintar a tela (evita "piscar") -->
+    <script is:inline>
+      document.documentElement.classList.add('js')
+      try {
+        const t = localStorage.getItem('imar-tema')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+        if (sessionStorage.getItem('imar-visitou')) document.documentElement.classList.add('ja-visitou')
+      } catch (e) {}
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('ja-visitou')
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: site.nome,
+      description: site.descricao,
+      email: site.email,
+      foundingDate: String(site.fundacao),
+      areaServed: 'Baixada Santista, SP',
+      sameAs: [site.redes.instagram.url, site.redes.linkedin.url, site.redes.tiktok.url],
+    })} />
+  </head>
+  <body>
+    <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>

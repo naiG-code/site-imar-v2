@@ -1,0 +1,159 @@
+---
+import Icon from './Icon.astro'
+import { contato } from '../data/conteudo'
+import { servicos } from '../data/servicos'
+import { site, whatsappLink } from '../data/site'
+
+const canais = [
+  { icone: 'whatsapp', rotulo: 'WhatsApp', valor: site.whatsapp.exibicao, href: whatsappLink(), externo: true },
+  { icone: 'email', rotulo: 'E-mail', valor: site.email, href: `mailto:${site.email}`, externo: false },
+  { icone: 'instagram', rotulo: 'Instagram', valor: site.redes.instagram.usuario, href: site.redes.instagram.url, externo: true },
+  { icone: 'linkedin', rotulo: 'LinkedIn', valor: site.redes.linkedin.usuario, href: site.redes.linkedin.url, externo: true },
+  { icone: 'tiktok', rotulo: 'TikTok', valor: site.redes.tiktok.usuario, href: site.redes.tiktok.url, externo: true },
+] as const
+const perfis = ['Empresa', 'Escola', 'Evento', 'Organização']
+---
+
+<section class="section contato" id="contato" data-depth-mark="4800">
+  <div class="wrap contato__grid">
+    <div class="contato__info">
+      <p class="eyebrow"><b>06</b> Contato · −4.800 m</p>
+      <h2 class="h2" data-split>{contato.titulo}</h2>
+      <p class="lead" data-reveal>{contato.texto}</p>
+
+      <ul class="canais">
+        {canais.map((c) => (
+          <li data-reveal>
+            <a href={c.href} target={c.externo ? '_blank' : undefined} rel={c.externo ? 'noopener' : undefined}>
+              <Icon name={c.icone} size={20} />
+              <span class="canais__lbl">{c.rotulo}</span>
+              <span class="canais__val">{c.valor}</span>
+              <Icon name="seta" class="canais__arrow" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <form class="form" data-form data-key={site.web3formsKey} data-email={site.email} novalidate>
+      <div class="form__hud" aria-hidden="true">
+        <span>Transmissão</span>
+        <span data-form-hud><i class="pulse-dot"></i> Aguardando</span>
+      </div>
+
+      <fieldset class="form__perfil">
+        <legend>Você é</legend>
+        <div class="chips">
+          {perfis.map((p, i) => (
+            <label class="chip">
+              <input type="radio" name="perfil" value={p} checked={i === 0} />
+              <span>{p}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="form__row">
+        <label class="field"><span>Nome</span><input name="nome" type="text" autocomplete="name" required /></label>
+        <label class="field"><span>E-mail</span><input name="email" type="email" autocomplete="email" required /></label>
+      </div>
+      <div class="form__row">
+        <label class="field"><span>WhatsApp <small>(opcional)</small></span><input name="telefone" type="tel" autocomplete="tel" inputmode="tel" /></label>
+        <label class="field"><span>Empresa / organização</span><input name="organizacao" type="text" autocomplete="organization" /></label>
+      </div>
+      <label class="field">
+        <span>Serviço de interesse</span>
+        <select name="servico" data-form-servico>
+          {servicos.map((s) => <option value={s.titulo} data-id={s.id}>{s.titulo}</option>)}
+          <option value="Ainda não sei">Ainda não sei</option>
+        </select>
+      </label>
+      <label class="field"><span>Mensagem</span><textarea name="mensagem" rows="4" required placeholder="Conte um pouco sobre o seu desafio"></textarea></label>
+
+      <!-- Armadilha para robôs: pessoas não veem este campo -->
+      <input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" />
+
+      <div class="form__foot">
+        <button class="btn btn--primary" type="submit" data-magnetic><span>Enviar mensagem</span><Icon name="seta" /></button>
+        <p class="form__status" data-form-status role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contato__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); align-items: start; }
+
+  .canais { list-style: none; padding: 0; margin: 48px 0 0; border-top: 1px solid var(--line); }
+  .canais li { border-bottom: 1px solid var(--line); }
+  .canais a {
+    position: relative; display: grid; grid-template-columns: 24px 110px 1fr 20px; align-items: center; gap: 16px;
+    padding: 20px 0; text-decoration: none; transition: padding .5s var(--ease-out), color .3s;
+  }
+  .canais a::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; background: var(--card-2);
+    transform: scaleY(0); transform-origin: bottom; transition: transform .5s var(--ease-out);
+  }
+  .canais a:hover { padding-left: 16px; padding-right: 16px; }
+  .canais a:hover::before { transform: scaleY(1); }
+  .canais__lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .canais__val { font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+  .canais :global(.canais__arrow) { color: var(--accent-ink); opacity: 0; transform: translate(-6px, 6px); transition: opacity .3s, transform .5s var(--ease-out); }
+  .canais a:hover :global(.canais__arrow) { opacity: 1; transform: none; }
+
+  .form {
+    display: grid; gap: 18px; padding: clamp(24px, 3.5vw, 44px); border-radius: calc(var(--radius) + 6px);
+    background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .form__hud {
+    display: flex; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px dashed var(--line-2);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  }
+  .form__hud span:last-child { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-ink); }
+  .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1.4s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: .2; } }
+
+  .form__perfil { border: 0; padding: 0; margin: 0; }
+  .form__perfil legend, .field > span {
+    display: block; margin-bottom: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .field small { text-transform: none; letter-spacing: 0; opacity: .7; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span {
+    display: inline-block; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line-2);
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color .3s, color .3s, border-color .3s;
+  }
+  .chip input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { display: block; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line-2);
+    background: color-mix(in oklab, var(--bg-0), transparent 40%); color: var(--ink);
+    font: inherit; font-size: 16px; transition: border-color .3s, box-shadow .3s;
+  }
+  .field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+  .field select option { background: var(--bg-0); color: var(--ink); }
+  .field textarea { resize: vertical; min-height: 120px; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  .field input[aria-invalid='true'], .field textarea[aria-invalid='true'] { border-color: #ff6b81; }
+
+  .form__foot { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 6px; }
+  .form__status { margin: 0; font-size: 14px; color: var(--muted); }
+  .form__status.is-ok { color: var(--accent-ink); }
+  .form__status.is-err { color: #ff6b81; }
+
+  @media (max-width: 960px) {
+    .contato__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .form__row { grid-template-columns: 1fr; }
+    .canais a { grid-template-columns: 24px 1fr 20px; }
+    .canais__lbl { display: none; }
+  }
+</style>

@@ -1,0 +1,148 @@
+---
+import Icon from './Icon.astro'
+import { site, whatsappLink } from '../data/site'
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+const links = [
+  { href: '#sobre', label: 'Quem somos' },
+  { href: '#servicos', label: 'Serviços' },
+  { href: '#metodo', label: 'Método' },
+  { href: '#projetos', label: 'Projetos' },
+  { href: '#contato', label: 'Contato' },
+]
+---
+
+<header class="nav" data-nav>
+  <div class="nav__bar">
+    <a class="nav__brand" href="#topo" aria-label="IMar Júnior, voltar ao topo">
+      <img src={`${base}img/logo-mark.png`} alt="" width="36" height="36" />
+      <span>imar <i>júnior</i></span>
+    </a>
+
+    <nav class="nav__links" aria-label="Seções">
+      {links.map((l, i) => (
+        <a href={l.href} data-nav-link>
+          <small>0{i + 1}</small>
+          <span class="nav__roll" data-text={l.label}><span>{l.label}</span></span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="nav__actions">
+      <button class="nav__theme" type="button" data-theme-toggle aria-label="Alternar modo claro e escuro">
+        <Icon name="sol" class="i-sol" />
+        <Icon name="lua" class="i-lua" />
+      </button>
+      <a class="btn btn--primary nav__cta" href="#contato" data-magnetic>
+        <span>Agendar reunião</span><Icon name="seta" />
+      </a>
+      <button class="nav__burger" type="button" data-menu-open aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" data-menu hidden>
+  <div class="menu__bg" data-menu-bg></div>
+  <div class="menu__inner wrap">
+    <button class="menu__close" type="button" data-menu-close aria-label="Fechar menu"><Icon name="fechar" size={24} /></button>
+    <nav aria-label="Menu">
+      {links.map((l, i) => (
+        <a href={l.href} data-menu-link><small>0{i + 1}</small><span>{l.label}</span></a>
+      ))}
+    </nav>
+    <div class="menu__foot" data-menu-link>
+      <a href={whatsappLink()} target="_blank" rel="noopener">WhatsApp · {site.whatsapp.exibicao}</a>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .nav {
+    position: fixed; inset: 0 0 auto; z-index: 100;
+    padding: 14px var(--gutter);
+    transition: transform .6s var(--ease-out);
+  }
+  .nav.is-hidden { transform: translateY(-110%); }
+  .nav__bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    max-width: calc(var(--maxw) + 40px); margin: 0 auto; padding: 8px 8px 8px 16px;
+    border: 1px solid transparent; border-radius: 999px;
+    transition: background-color .5s, border-color .5s, backdrop-filter .5s;
+  }
+  .nav.is-scrolled .nav__bar {
+    background: var(--glass); border-color: var(--line);
+    backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+
+  .nav__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav__brand img { width: 36px; height: 36px; transition: transform 1.2s var(--ease-out); }
+  .nav__brand:hover img { transform: rotate(-360deg); }
+  .nav__brand span {
+    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: 22px; font-weight: 500;
+    letter-spacing: -.03em;
+  }
+  .nav__brand i { font-weight: 300; color: var(--accent-ink); }
+
+  .nav__links { display: flex; gap: 6px; }
+  .nav__links a {
+    display: flex; align-items: baseline; gap: 6px; padding: 10px 12px; text-decoration: none;
+    font-size: 14px; font-weight: 600;
+  }
+  .nav__links small { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .nav__links a.is-active small { color: var(--accent-ink); }
+  .nav__roll { position: relative; display: inline-block; overflow: hidden; vertical-align: bottom; }
+  .nav__roll > span, .nav__roll::after { display: block; transition: transform .5s var(--ease-out); }
+  .nav__roll::after { content: attr(data-text); position: absolute; left: 0; top: 100%; color: var(--accent-ink); }
+  .nav__links a:hover .nav__roll > span, .nav__links a:hover .nav__roll::after { transform: translateY(-100%); }
+
+  .nav__actions { display: flex; align-items: center; gap: 8px; }
+  .nav__theme, .nav__burger {
+    display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid var(--line-2); background: transparent; cursor: pointer;
+    transition: background-color .3s, transform .5s var(--ease-out);
+  }
+  .nav__theme:hover { background: var(--card-2); transform: rotate(25deg); }
+  .nav__theme :global(.i-sol) { display: none; }
+  :global([data-theme='light']) .nav__theme :global(.i-sol) { display: block; }
+  :global([data-theme='light']) .nav__theme :global(.i-lua) { display: none; }
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme='dark'])) .nav__theme :global(.i-sol) { display: block; }
+    :global(:root:not([data-theme='dark'])) .nav__theme :global(.i-lua) { display: none; }
+  }
+  .nav__cta { --h: 46px; padding: 0 20px; font-size: 14px; }
+  .nav__burger { display: none; }
+
+  @media (max-width: 1080px) {
+    .nav__links { display: none; }
+    .nav__burger { display: grid; }
+  }
+  @media (max-width: 560px) {
+    .nav__cta { display: none; }
+    .nav__brand span { font-size: 19px; }
+  }
+
+  /* ---------- Menu mobile ---------- */
+  .menu { position: fixed; inset: 0; z-index: 200; }
+  .menu[hidden] { display: none; }
+  .menu__bg {
+    position: absolute; inset: 0; background: var(--bg-1);
+    clip-path: circle(0% at calc(100% - 48px) 40px);
+  }
+  .menu__inner { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 48px; }
+  .menu__close {
+    position: absolute; top: 22px; right: var(--gutter); width: 50px; height: 50px; border-radius: 50%;
+    border: 1px solid var(--line-2); background: none; cursor: pointer; display: grid; place-items: center;
+  }
+  .menu nav { display: grid; gap: 6px; }
+  .menu nav a {
+    display: flex; align-items: baseline; gap: 16px; text-decoration: none;
+    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: clamp(42px, 11vw, 80px);
+    line-height: 1.05; letter-spacing: -.04em;
+  }
+  .menu nav a small { font-family: var(--mono); font-size: 12px; color: var(--accent-ink); letter-spacing: 0; }
+  .menu__foot { display: grid; gap: 8px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .menu__foot a { text-decoration: none; }
+</style>

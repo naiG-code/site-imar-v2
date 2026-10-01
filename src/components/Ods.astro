@@ -1,0 +1,79 @@
+---
+import { ods } from '../data/conteudo'
+---
+
+<section class="section ods" id="ods" data-depth-mark="3000">
+  <div class="wrap">
+    <div class="ods__head">
+      <div>
+        <p class="eyebrow"><b>05</b> Compromissos globais · −3.000 m</p>
+        <h2 class="h2" data-split>Alinhados à <em>Agenda 2030</em> da ONU.</h2>
+      </div>
+      <p class="lead" data-reveal>Cada projeto nasce para gerar impacto ambiental positivo, da gestão de resíduos à conservação dos ecossistemas marinhos.</p>
+    </div>
+
+    <div class="ods__grid">
+      {ods.map((o) => (
+        <article class="ods-card" style={`--c:${o.cor}`} data-reveal data-tilt>
+          <span class="ods-card__n">{String(o.numero).padStart(2, '0')}</span>
+          <div>
+            <p class="ods-card__lbl">ODS {o.numero}</p>
+            <h3>{o.titulo}</h3>
+            <p class="muted">{o.texto}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="decade" data-reveal>
+      <div class="decade__years"><span>2021</span><i aria-hidden="true"><b data-decade-bar></b></i><span>2030</span></div>
+      <div>
+        <h3 class="h3">Década da Ciência Oceânica</h3>
+        <p class="muted">Em sintonia com a Década das Nações Unidas da Ciência Oceânica para o Desenvolvimento Sustentável (UNESCO / COI).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ods__head { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: end; margin-bottom: clamp(48px, 6vw, 80px); }
+  .ods__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .ods-card {
+    position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 40px;
+    min-height: 380px; padding: 26px; border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--line); background: var(--card); transform-style: preserve-3d;
+    transition: border-color .5s, background-color .5s;
+  }
+  .ods-card::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0;
+    background: radial-gradient(120% 80% at 0% 0%, var(--c), transparent 70%); transition: opacity .6s;
+  }
+  .ods-card:hover { border-color: var(--c); }
+  .ods-card:hover::before { opacity: .35; }
+  .ods-card__n {
+    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 144; font-weight: 600;
+    font-size: 120px; line-height: .8; letter-spacing: -.05em; color: var(--c); transform: translateZ(40px);
+  }
+  .ods-card__lbl { margin: 0 0 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .ods-card h3 { margin: 0 0 10px; font-size: 20px; line-height: 1.2; letter-spacing: -.01em; }
+  .ods-card p.muted { margin: 0; font-size: 14.5px; }
+
+  .decade {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: center; margin-top: 16px;
+    padding: 28px; border-radius: var(--radius); border: 1px solid var(--line);
+  }
+  .decade__years { display: flex; align-items: center; gap: 16px; font-family: var(--mono); font-size: 14px; }
+  .decade__years i { position: relative; flex: 1; height: 2px; background: var(--line-2); overflow: hidden; border-radius: 2px; }
+  .decade__years b { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+  .decade p { margin: 8px 0 0; }
+
+  @media (max-width: 1000px) {
+    .ods__head, .decade { grid-template-columns: 1fr; }
+    .ods__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .ods__grid { grid-template-columns: 1fr; }
+    .ods-card { min-height: 0; }
+    .ods-card__n { font-size: 88px; }
+  }
+</style>

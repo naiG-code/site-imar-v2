@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro'
+import Preloader from '../components/Preloader.astro'
+import Ambient from '../components/Ambient.astro'
+import Nav from '../components/Nav.astro'
+import Hero from '../components/Hero.astro'
+import Marquee from '../components/Marquee.astro'
+import Sobre from '../components/Sobre.astro'
+import Servicos from '../components/Servicos.astro'
+import Metodo from '../components/Metodo.astro'
+import Projetos from '../components/Projetos.astro'
+import Ods from '../components/Ods.astro'
+import FacaParte from '../components/FacaParte.astro'
+import Contato from '../components/Contato.astro'
+import Footer from '../components/Footer.astro'
+---
+
+<Base>
+  <Preloader />
+  <Ambient />
+  <Nav />
+  <main id="conteudo">
+    <Hero />
+    <Marquee />
+    <Sobre />
+    <Servicos />
+    <Metodo />
+    <Projetos />
+    <Ods />
+    <FacaParte />
+    <Contato />
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  import { iniciar } from '../scripts/main'
+  iniciar()
+</script>

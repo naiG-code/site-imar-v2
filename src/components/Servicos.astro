@@ -1,0 +1,196 @@
+---
+import Icon from './Icon.astro'
+import { servicos } from '../data/servicos'
+import { publicos } from '../data/conteudo'
+
+const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
+---
+
+<section class="servicos" id="servicos" data-depth-mark="1000">
+  <div class="servicos__pin" data-hscroll>
+    <div class="servicos__track" data-hscroll-track>
+      <header class="servicos__intro">
+        <p class="eyebrow"><b>02</b> Serviços · −1.000 m</p>
+        <h2 class="h2" data-split>Soluções ambientais para o seu <em>negócio</em> ou evento.</h2>
+        <p class="lead">Seis frentes de atuação, uma mesma base: a ciência do Instituto do Mar aplicada à sua realidade.</p>
+        <p class="servicos__hint" aria-hidden="true">Continue rolando <Icon name="seta" /></p>
+      </header>
+
+      {servicos.map((s, i) => (
+        <article class:list={['svc', { 'svc--hero': i === 0 }]} data-svc data-cursor="Ver">
+          <div class="svc__top">
+            <span class="svc__num">SRV·0{i + 1}</span>
+            {s.selo && <span class="svc__selo">{s.selo}</span>}
+          </div>
+
+          <svg class="svc__art" viewBox="0 0 120 120" aria-hidden="true" data-draw>
+            {s.icone === 'onda' && (
+              <>
+                <path d="M10 70c12-14 24-14 36 0s24 14 36 0 24-14 28-6" />
+                <path d="M10 88c12-14 24-14 36 0s24 14 36 0 24-14 28-6" />
+                <circle cx="60" cy="36" r="16" />
+                <path d="M60 14v-6M82 36h6M32 36h-6M75 21l4-4M45 21l-4-4" />
+              </>
+            )}
+            {s.icone === 'folha' && (
+              <>
+                <path d="M24 96C24 50 54 22 100 20c0 46-28 76-76 76Z" />
+                <path d="M24 96 76 44M48 72h18M60 60V42" />
+              </>
+            )}
+            {s.icone === 'ciclo' && (
+              <>
+                <path d="M60 18 84 58H36Z" />
+                <path d="M30 70 18 92h46M90 70l12 22H74" />
+                <path d="M60 18 50 8M84 58l12-4M36 58l-12-4" />
+                <circle cx="60" cy="80" r="10" />
+              </>
+            )}
+            {s.icone === 'xicara' && (
+              <>
+                <path d="M22 50h62v18a28 28 0 0 1-28 28h-6a28 28 0 0 1-28-28Z" />
+                <path d="M84 56h8a12 12 0 0 1 0 24h-10M16 104h80" />
+                <path d="M42 38c-6-8 6-12 0-22M58 38c-6-8 6-12 0-22" />
+              </>
+            )}
+            {s.icone === 'farol' && (
+              <>
+                <path d="M48 104 54 44h12l6 60Z" />
+                <path d="M46 44h28l-4-12H50Z" />
+                <path d="M60 32V22M78 30l22-10M78 38h24M42 30 20 20M42 38H18" />
+                <path d="M14 108c10-6 20-6 30 0s20 6 30 0 20-6 32 0" />
+              </>
+            )}
+            {s.icone === 'bussola' && (
+              <>
+                <circle cx="60" cy="60" r="42" />
+                <path d="M72 48 52 56l-4 16 20-8Z" />
+                <path d="M60 12v8M60 100v8M12 60h8M100 60h8" />
+              </>
+            )}
+          </svg>
+
+          <div class="svc__body">
+            <p class="svc__para">{s.paraQuem}</p>
+            <h3 class="h3">{s.titulo}</h3>
+            <p class="svc__resumo">{s.resumo}</p>
+            <ul>{s.pontos.map((p) => <li>{p}</li>)}</ul>
+          </div>
+
+          <a class="svc__cta" href="#contato" data-servico={s.id}>
+            Quero esse serviço <Icon name="seta" />
+          </a>
+          <span class="svc__sigla" aria-hidden="true">{s.sigla}</span>
+        </article>
+      ))}
+    </div>
+
+    <div class="servicos__progress" aria-hidden="true"><i data-hscroll-bar></i></div>
+  </div>
+
+  <div class="wrap publicos">
+    <h3 class="publicos__title" data-reveal>Para quem a gente trabalha</h3>
+    <div class="publicos__grid">
+      {publicos.map((p, i) => (
+        <article class="pub" data-reveal>
+          <span class="pub__n">0{i + 1}</span>
+          <h4>{p.nome}</h4>
+          <p>{p.texto}</p>
+          <ul>{p.servicos.map((id) => <li>{nomeServico[id]}</li>)}</ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .servicos { position: relative; z-index: 2; padding-top: clamp(96px, 12vw, 160px); }
+  .servicos__pin { position: relative; }
+  .servicos__track {
+    display: flex; gap: 20px; padding: 0 var(--gutter); width: max-content; align-items: stretch;
+  }
+  .servicos__intro { width: min(560px, 80vw); flex-shrink: 0; padding-right: 40px; display: flex; flex-direction: column; justify-content: center; }
+  .servicos__hint {
+    display: inline-flex; align-items: center; gap: 8px; margin: 40px 0 0;
+    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink);
+  }
+  .servicos__hint :global(svg) { transform: rotate(45deg); }
+
+  .svc {
+    position: relative; flex-shrink: 0; width: clamp(320px, 30vw, 440px); min-height: min(640px, 76vh);
+    display: flex; flex-direction: column; gap: 20px; padding: 28px; overflow: hidden;
+    border-radius: var(--radius); border: 1px solid var(--line); background: var(--card);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: border-color .5s, background-color .5s, transform .6s var(--ease-out);
+  }
+  .svc:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); background: var(--card-2); }
+  .svc--hero { width: clamp(340px, 38vw, 560px); background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 16%, transparent), var(--card) 60%); }
+
+  .svc__top { display: flex; justify-content: space-between; align-items: center; }
+  .svc__num { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: var(--muted); }
+  .svc__selo {
+    padding: 6px 12px; border-radius: 999px; background: var(--accent); color: var(--on-accent);
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600;
+  }
+  .svc__art {
+    width: 96px; height: 96px; fill: none; stroke: var(--accent-ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    transition: transform .8s var(--ease-out);
+  }
+  .svc:hover .svc__art { transform: translateY(-6px) rotate(-4deg) scale(1.05); }
+  .svc__body { flex: 1; }
+  .svc__para { margin: 0 0 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .svc__resumo { margin: 14px 0 0; color: var(--muted); font-size: 15.5px; }
+  .svc ul { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; font-size: 14.5px; }
+  .svc li { display: flex; gap: 10px; }
+  .svc li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; margin-top: .62em; border-radius: 50%; background: var(--accent); }
+
+  .svc__cta {
+    position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
+    padding: 12px 18px; border-radius: 999px; border: 1px solid var(--line-2);
+    font-size: 14px; font-weight: 650; text-decoration: none; transition: background-color .3s, color .3s, border-color .3s;
+  }
+  .svc__cta:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  .svc__sigla {
+    position: absolute; right: -6px; bottom: -18px; pointer-events: none;
+    font-family: var(--display); font-weight: 700; font-size: 120px; line-height: 1; letter-spacing: -.05em;
+    color: transparent; -webkit-text-stroke: 1px var(--line); transition: -webkit-text-stroke-color .5s;
+  }
+  .svc:hover .svc__sigla { -webkit-text-stroke-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+
+  .servicos__progress { margin: 40px var(--gutter) 0; height: 1px; background: var(--line); }
+  .servicos__progress i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+
+  /* Celular/tablet: sem rolagem horizontal fixa, cards empilhados */
+  @media (max-width: 900px) {
+    .servicos__track { flex-direction: column; width: auto; }
+    .servicos__intro { width: auto; padding: 0 0 20px; }
+    .servicos__hint, .servicos__progress { display: none; }
+    .svc, .svc--hero { width: auto; min-height: 0; }
+  }
+
+  /* ---------- Para quem ---------- */
+  .publicos { padding-top: clamp(96px, 12vw, 160px); }
+  .publicos__title {
+    margin: 0 0 32px; font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  }
+  .publicos__grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
+  .pub { padding: 28px 24px 8px 0; }
+  .pub + .pub { padding-left: 24px; border-left: 1px solid var(--line); }
+  .pub__n { font-family: var(--mono); font-size: 11px; color: var(--accent-ink); }
+  .pub h4 {
+    margin: 10px 0 12px; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1; font-weight: 400;
+    font-size: clamp(30px, 3vw, 44px); letter-spacing: -.03em; line-height: 1;
+  }
+  .pub p { margin: 0; color: var(--muted); font-size: 15px; }
+  .pub ul { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .pub li { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 12px; }
+  @media (max-width: 960px) {
+    .publicos__grid { grid-template-columns: 1fr 1fr; }
+    .pub:nth-child(3) { padding-left: 0; border-left: 0; }
+    .pub { padding-bottom: 28px; }
+  }
+  @media (max-width: 560px) {
+    .publicos__grid { grid-template-columns: 1fr; }
+    .pub, .pub + .pub { padding-left: 0; border-left: 0; border-bottom: 1px solid var(--line); }
+  }
+</style>
