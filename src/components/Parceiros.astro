@@ -15,7 +15,8 @@ const faixa = Array.from({ length: Math.max(2, Math.ceil(12 / parceiros.length))
       <div class="parc__grupo">
         {faixa.map((p) => (
           <span class="parc__item">
-            {p.logo ? <img src={`${base}${p.logo}`} alt="" loading="lazy" /> : <span class="parc__nome">{p.nome}</span>}
+            {p.logo && <img src={`${base}${p.logo}`} alt="" loading="lazy" style={p.escala ? `--k:${p.escala}` : undefined} />}
+            {(!p.logo || p.mostrarNome) && <span class="parc__nome">{p.nome}</span>}
           </span>
         ))}
       </div>
@@ -38,10 +39,10 @@ const faixa = Array.from({ length: Math.max(2, Math.ceil(12 / parceiros.length))
   .parc__mask:hover .parc__grupo { animation-play-state: paused; }
   @keyframes parc-rola { to { transform: translateX(-100%); } }
 
-  .parc__item { display: grid; place-items: center; height: 56px; padding: 0 clamp(28px, 4vw, 56px); }
+  .parc__item { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 clamp(28px, 4vw, 56px); }
   /* Logos ficam monocromáticos (brancos no escuro, pretos no claro) para combinar com o site */
   .parc__item img {
-    height: 40px; width: auto; max-width: 160px; object-fit: contain;
+    height: calc(40px * var(--k, 1)); width: auto; max-width: 200px; object-fit: contain;
     filter: grayscale(1) brightness(0) invert(1); opacity: .7; transition: filter .4s, opacity .4s;
   }
   .parc__item:hover img { opacity: 1; }

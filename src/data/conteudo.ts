@@ -110,15 +110,18 @@ export const projetos: {
  * Quem já navegou com a gente (faixa de logos logo abaixo do topo).
  * Para colocar um logo: salve o arquivo em public/img/parceiros/ (de preferência
  * .svg ou .png com fundo transparente) e preencha `logo`, ex.: logo: 'img/parceiros/ambev.svg'
- * Sem `logo`, aparece o nome escrito.
+ * Sem `logo`, aparece o nome escrito. `mostrarNome: true` mostra o logo e o nome juntos.
+ * `escala` aumenta ou diminui um logo que ficou grande ou pequeno demais (1 = normal).
  */
-export const parceiros: { nome: string; logo?: string }[] = [
-  { nome: 'Ambev' }, // TODO: logo
-  { nome: 'Bloom' }, // TODO: logo
-  { nome: 'Unifesp' }, // TODO: logo
-  { nome: 'Cultura Inglesa' }, // TODO: logo
-  { nome: 'IPT' }, // TODO: logo
-  { nome: 'IO Jr.' }, // TODO: logo
+export const parceiros: { nome: string; logo?: string; mostrarNome?: boolean; escala?: number }[] = [
+  { nome: 'Ambev', logo: 'img/parceiros/ambev.png', escala: 0.8 },
+  { nome: 'Bloom Ocean', logo: 'img/parceiros/bloom.png' },
+  { nome: 'Unifesp', logo: 'img/parceiros/unifesp.png', escala: 1.6 },
+  { nome: 'Projeto Mantas do Brasil' }, // TODO: logo (site oficial fora do ar)
+  { nome: 'Cultura Inglesa', logo: 'img/parceiros/cultura.png' },
+  { nome: 'Seiva Jr.', logo: 'img/parceiros/seiva.png', mostrarNome: true },
+  { nome: 'IPT', logo: 'img/parceiros/ipt.png' },
+  { nome: 'IO Jr.', logo: 'img/parceiros/iojr.png', escala: 1.25 },
 ]
 
 export const ods = [
