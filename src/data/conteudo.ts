@@ -16,8 +16,6 @@ export const valores = ['Transparência', 'Resiliência', 'Ética', 'Protagonism
 
 export const sobre = {
   titulo: 'Estudantes do mar, trabalhando em terra firme.',
-  manifesto:
-    'Somos uma Empresa Júnior que leva a ciência do Instituto do Mar da Unifesp para fora dos laboratórios: para dentro das empresas, das escolas e dos eventos do litoral paulista.',
   texto: [
     'Fundada em 2015, a IMar Júnior é vinculada ao Instituto do Mar da Universidade Federal de São Paulo, no campus Baixada Santista.',
     'Nosso propósito é fomentar a interdisciplinaridade, formar jovens empreendedores, estimular a inovação e promover a sustentabilidade em cada projeto.',

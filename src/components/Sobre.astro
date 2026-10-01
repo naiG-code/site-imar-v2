@@ -15,8 +15,6 @@ const numeros = [
 <section class="section sobre" id="sobre">
   <div class="wrap">
 
-    <p class="sobre__manifesto" data-scrub-words>{sobre.manifesto}</p>
-
     <div class="sobre__grid">
       <figure class="sobre__photo" data-wave-reveal>
         <img src={`${base}img/equipe.jpg`} alt="Equipe da IMar Júnior reunida segurando a bandeira da empresa" width="1400" height="1050" loading="lazy" />
@@ -58,11 +56,6 @@ const numeros = [
 </section>
 
 <style>
-  .sobre__manifesto {
-    font-family: var(--display); font-weight: 500;
-    font-size: clamp(28px, 3.7vw, 58px); line-height: 1.14; letter-spacing: -.03em;
-    margin: 0 0 clamp(80px, 10vw, 140px); text-wrap: balance;
-  }
 
   .sobre__grid {
     display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center;

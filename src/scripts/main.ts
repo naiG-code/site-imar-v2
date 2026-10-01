@@ -38,7 +38,6 @@ export function iniciar() {
   document.fonts.ready.then(() => {
     titulos()
     revelar()
-    palavrasNoScroll()
     revelarImagens()
     contadores(false)
     etapas()
@@ -238,18 +237,6 @@ function revelar() {
     once: true,
     onEnter: (els) =>
       gsap.fromTo(els, { opacity: 0, y: 48 }, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08, overwrite: true }),
-  })
-}
-
-/* Manifesto: as palavras "acendem" conforme a rolagem */
-function palavrasNoScroll() {
-  $$('[data-scrub-words]').forEach((el) => {
-    const split = SplitText.create(el, { type: 'words', wordsClass: 'split-word' })
-    gsap.fromTo(
-      split.words,
-      { opacity: 0.14 },
-      { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 60%', scrub: true } },
-    )
   })
 }
 
