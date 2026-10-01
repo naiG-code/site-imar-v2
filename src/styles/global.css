@@ -5,10 +5,21 @@
    as variáveis abaixo (veja também /identidade).
    ========================================================= */
 
-@import '@fontsource-variable/fraunces/full.css';
-@import '@fontsource-variable/fraunces/full-italic.css';
-@import '@fontsource-variable/manrope/index.css';
-@import '@fontsource-variable/jetbrains-mono/index.css';
+@import '@fontsource-variable/montserrat/index.css';
+@import '@fontsource-variable/outfit/index.css';
+
+/*
+ * MADE TOMMY (fonte principal, títulos).
+ * Coloque os arquivos da fonte em public/fonts/ com estes nomes. Se a pessoa
+ * já tiver a fonte instalada no computador, ela também é usada (local()).
+ * Enquanto os arquivos não estiverem lá, os títulos usam a Outfit, que é parecida.
+ */
+@font-face { font-family: 'MADE Tommy'; font-weight: 400; font-display: swap;
+  src: local('MADE TOMMY Regular'), local('MADETommy-Regular'), url('/fonts/MADETommy-Regular.woff2') format('woff2'), url('/fonts/MADETommy-Regular.otf') format('opentype'); }
+@font-face { font-family: 'MADE Tommy'; font-weight: 500; font-display: swap;
+  src: local('MADE TOMMY Medium'), local('MADETommy-Medium'), url('/fonts/MADETommy-Medium.woff2') format('woff2'), url('/fonts/MADETommy-Medium.otf') format('opentype'); }
+@font-face { font-family: 'MADE Tommy'; font-weight: 700; font-display: swap;
+  src: local('MADE TOMMY Bold'), local('MADETommy-Bold'), url('/fonts/MADETommy-Bold.woff2') format('woff2'), url('/fonts/MADETommy-Bold.otf') format('opentype'); }
 
 :root {
   /* Azuis do logo */
@@ -22,9 +33,9 @@
   --on-accent: #031027;      /* texto em cima do destaque */
 
   /* Fontes */
-  --display: 'Fraunces Variable', 'Georgia', serif;
-  --sans: 'Manrope Variable', system-ui, sans-serif;
-  --mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --display: 'MADE Tommy', 'Outfit Variable', 'Montserrat Variable', system-ui, sans-serif;
+  --sans: 'Montserrat Variable', 'Gotham', system-ui, sans-serif;
+  --mono: 'Montserrat Variable', 'Gotham', system-ui, sans-serif; /* rótulos pequenos em caixa alta */
 
   --gutter: clamp(16px, 4vw, 56px);
   --maxw: 1360px;
@@ -90,8 +101,8 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--sans);
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.65;
   color: var(--ink);
   background: var(--bg-0);
   overflow-x: hidden;
@@ -124,34 +135,31 @@ main, footer { position: relative; z-index: 2; }
 /* ---------- Tipografia ---------- */
 .display {
   font-family: var(--display);
-  font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144;
-  font-weight: 380;
-  letter-spacing: -0.035em;
-  line-height: .95;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
   margin: 0;
 }
+/* Palavra em destaque nos títulos: mesma fonte, cor de destaque */
 .display em, .h2 em {
-  font-style: italic;
-  font-weight: 300;
+  font-style: normal;
   color: var(--accent-ink);
 }
 .h2 {
   font-family: var(--display);
-  font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144;
-  font-weight: 400;
-  font-size: clamp(38px, 6vw, 92px);
-  line-height: .98;
-  letter-spacing: -0.035em;
+  font-weight: 700;
+  font-size: clamp(36px, 5.4vw, 84px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   margin: 0 0 28px;
   text-wrap: balance;
 }
 .h3 {
   font-family: var(--display);
-  font-variation-settings: 'SOFT' 100, 'opsz' 72;
-  font-weight: 450;
-  font-size: clamp(24px, 2.4vw, 34px);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
   margin: 0;
 }
 .lead { font-size: clamp(18px, 1.6vw, 22px); line-height: 1.55; color: var(--muted); max-width: 60ch; margin: 0; }

@@ -4,23 +4,21 @@
  * para a diretoria escolher. Acesse em /identidade
  */
 import Base from '../layouts/Base.astro'
-import '@fontsource-variable/syne/index.css'
-import '@fontsource/instrument-serif/400.css'
-import '@fontsource/instrument-serif/400-italic.css'
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
 
 const destaques = [
-  { id: 'bio', nome: 'Bioluminescência', hex: '#3DF2C9', claro: '#087A64', texto: 'O brilho de organismos do mar profundo. Contrasta com os azuis sem brigar com eles. É a cor que está no site.', padrao: true },
+  { id: 'celeste', nome: 'Azul-celeste', hex: '#5AB8FF', claro: '#1663B5', texto: 'Azul luminoso da mesma família do logo. Harmonioso com o fundo azul-marinho. É a cor que está no site.', padrao: true },
+  { id: 'bio', nome: 'Bioluminescência', hex: '#3DF2C9', claro: '#087A64', texto: 'O brilho de organismos do mar profundo. Verde-água vibrante, a cor da primeira versão.' },
   { id: 'agua-viva', nome: 'Água-viva', hex: '#B79CFF', claro: '#6A4FD1', texto: 'Lilás translúcido das águas-vivas. Mais ousado e memorável, foge do "verde sustentável" comum.' },
   { id: 'areia', nome: 'Areia', hex: '#F2D49B', claro: '#8A6A1F', texto: 'O dourado da praia na maré baixa. Quente e acolhedor, o mais próximo do laranja da v1 sem ser laranja.' },
   { id: 'espuma', nome: 'Espuma', hex: '#9EF0FF', claro: '#0A7FA0', texto: 'Ciano claro da arrebentação. Monocromático e elegante, mantém tudo na família dos azuis.' },
 ]
 
 const fontes = [
-  { id: 'fraunces', nome: 'Fraunces', familia: "'Fraunces Variable', serif", estilo: "font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144", texto: 'Serifada macia e "ondulada", com itálico que parece escrito à mão. Fluida, elegante e cheia de personalidade. É a fonte que está no site.', padrao: true },
-  { id: 'instrument', nome: 'Instrument Serif', familia: "'Instrument Serif', serif", estilo: '', texto: 'Serifada editorial fina, com cara de revista científica de luxo. Muito sofisticada em tamanhos grandes.' },
-  { id: 'syne', nome: 'Syne', familia: "'Syne Variable', sans-serif", estilo: 'font-weight:700', texto: 'Sem serifa expandida e geométrica, na linha da JrFei. Mais "tech" e impactante, menos orgânica.' },
+  { id: 'tommy', nome: 'MADE TOMMY', familia: "'MADE Tommy', 'Outfit Variable', sans-serif", estilo: 'font-weight:700', texto: 'Geométrica, arredondada e com personalidade. É a fonte principal dos títulos.', padrao: true },
+  { id: 'montserrat', nome: 'Montserrat', familia: "'Montserrat Variable', sans-serif", estilo: 'font-weight:700', texto: 'Geométrica e muito legível, prima gratuita da Gotham. Usada nos textos e rótulos.' },
+  { id: 'outfit', nome: 'Outfit', familia: "'Outfit Variable', sans-serif", estilo: 'font-weight:700', texto: 'Parecida com a MADE TOMMY. Entra automaticamente se a MADE TOMMY não carregar.' },
 ]
 ---
 
@@ -71,7 +69,7 @@ const fontes = [
           </button>
         ))}
       </div>
-      <p class="muted id__note">Textos corridos: <b>Manrope</b>. Rótulos técnicos (coordenadas, profundidade): <b>JetBrains Mono</b>, herança da v1.</p>
+      <p class="muted id__note">Títulos: <b>MADE TOMMY</b>. Textos e rótulos: <b>Montserrat</b> (se o computador tiver a <b>Gotham</b> instalada, ela pode substituir).</p>
     </section>
 
     <section class="wrap id__block">
@@ -100,8 +98,8 @@ const fontes = [
     document.documentElement.dataset.theme === 'light' ||
     (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: light)').matches)
 
-  let acc = { hex: '#3DF2C9', claro: '#087A64', nome: 'Bioluminescência' }
-  let font = 'Fraunces'
+  let acc = { hex: '#5AB8FF', claro: '#1663B5', nome: 'Azul-celeste' }
+  let font = 'MADE TOMMY'
   const resumo = () => (escolha.innerHTML = `Seleção atual: <b>${acc.nome}</b> (${acc.hex} / ${acc.claro}) + <b>${font}</b>`)
 
   const aplicarCor = () => {
@@ -143,17 +141,17 @@ const fontes = [
   .prev img { width: 56px; height: 56px; margin-bottom: 28px; }
   .prev__eyebrow { margin: 0 0 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #92abc6; }
   .prev__title {
-    margin: 0 0 32px; max-width: 14ch; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144;
+    margin: 0 0 32px; max-width: 14ch; font-family: var(--display);
     font-size: clamp(40px, 6.5vw, 96px); line-height: .98; letter-spacing: -.035em;
   }
-  .prev__title em { font-style: italic; color: var(--accent); }
+  .prev__title em { font-style: normal; color: var(--accent); }
   .prev__row { display: flex; flex-wrap: wrap; gap: 10px; }
   .prev__btn { padding: 14px 22px; border-radius: 999px; background: var(--accent); color: #02121f; font-weight: 700; }
   .prev__chip { padding: 13px 18px; border-radius: 999px; border: 1px solid rgba(140, 200, 255, .3); }
 
   .id__block { margin-top: 72px; }
   .id__block > .h3 { margin-bottom: 24px; }
-  .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
   .opts--3 { grid-template-columns: repeat(3, 1fr); }
   .opt {
     display: grid; align-content: start; gap: 10px; text-align: left; padding: 20px; border-radius: 20px; cursor: pointer;
@@ -169,7 +167,7 @@ const fontes = [
   .opt__sw i:first-child { flex: 2; background: var(--a); }
   .opt__sw i:last-child { flex: 1; background: var(--b); }
   .opt__spec { font-size: 64px; line-height: 1.1; }
-  .opt__spec i { font-style: italic; color: var(--accent-ink); }
+  .opt__spec i { font-style: normal; color: var(--accent-ink); }
   .id__note { margin-top: 20px; }
 
   .pal { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }

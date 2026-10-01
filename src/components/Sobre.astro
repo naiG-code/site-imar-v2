@@ -59,7 +59,7 @@ const numeros = [
 
 <style>
   .sobre__manifesto {
-    font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 72;
+    font-family: var(--display); font-weight: 500;
     font-size: clamp(28px, 3.7vw, 58px); line-height: 1.14; letter-spacing: -.03em;
     margin: 0 0 clamp(80px, 10vw, 140px); text-wrap: balance;
   }
@@ -82,7 +82,7 @@ const numeros = [
   .card p { margin: 22px 0 0; font-size: 17px; }
   .card ul { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .card ul li {
-    font-family: var(--display); font-style: italic; font-size: 22px; letter-spacing: -.02em;
+    font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -.02em;
   }
   .card ul li:not(:last-child)::after { content: ' ·'; color: var(--accent-ink); }
   .card--accent { background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 18%, transparent), var(--card)); }
@@ -95,7 +95,7 @@ const numeros = [
   .sobre__nums div + div { padding-left: 20px; border-left: 1px solid var(--line); }
   .sobre__nums dt { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .sobre__nums dd {
-    margin: 10px 0 0; font-family: var(--display); font-variation-settings: 'SOFT' 100, 'opsz' 144;
+    margin: 10px 0 0; font-family: var(--display); font-weight: 700;
     font-size: clamp(48px, 7vw, 112px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
   }
 
