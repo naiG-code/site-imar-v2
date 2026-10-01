@@ -309,6 +309,7 @@ function carrossel() {
       gsap.set($('b', d), { clearProps: 'transform' })
     })
     if (cards[i]) desenhar(cards[i])
+    pausado = !!cards[i] && sobMouse === cards[i]
     reiniciarTimer()
   }
 
@@ -345,10 +346,19 @@ function carrossel() {
     }, 120)
   }, { passive: true })
 
-  track.addEventListener('pointerenter', () => { pausado = true; atualizarPausa() })
-  track.addEventListener('pointerleave', () => { pausado = false; atualizarPausa() })
-  track.addEventListener('focusin', () => { pausado = true; atualizarPausa() })
-  track.addEventListener('focusout', () => { pausado = false; atualizarPausa() })
+  // Só pausa com o mouse em cima do serviço que está em destaque
+  let sobMouse: HTMLElement | null = null
+  const checarPausa = () => {
+    const ativo = cards[atual]
+    pausado = !!ativo && (sobMouse === ativo || ativo.contains(document.activeElement))
+    atualizarPausa()
+  }
+  todosCards.forEach((c) => {
+    c.addEventListener('pointerenter', () => { sobMouse = c; checarPausa() })
+    c.addEventListener('pointerleave', () => { if (sobMouse === c) sobMouse = null; checarPausa() })
+    c.addEventListener('focusin', checarPausa)
+    c.addEventListener('focusout', () => requestAnimationFrame(checarPausa))
+  })
   ScrollTrigger.create({ trigger: track, start: 'top 85%', end: 'bottom top', onToggle: (st) => { visivel = st.isActive; atualizarPausa() } })
 
   /* ----- Filtro por público ----- */

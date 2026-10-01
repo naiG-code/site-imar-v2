@@ -15,10 +15,6 @@ const todos = publicos[0]
       <h2 class="h2 servicos__titulo" data-reveal>
         Soluções ambientais para <span class="servicos__frase"><em data-filtro-frase>{todos.frase}</em></span>
       </h2>
-      <div class="car__arrows">
-        <button type="button" class="car__arrow" data-car-prev aria-label="Serviço anterior"><Icon name="seta" size={20} /></button>
-        <button type="button" class="car__arrow" data-car-next aria-label="Próximo serviço"><Icon name="seta" size={20} /></button>
-      </div>
     </header>
 
     <div class="filtro" data-reveal>
@@ -37,6 +33,8 @@ const todos = publicos[0]
   </div>
 
   <div class="car" data-carousel aria-roledescription="carrossel" aria-label="Serviços">
+    <button type="button" class="car__arrow car__arrow--prev" data-car-prev aria-label="Serviço anterior"><Icon name="seta" size={22} /></button>
+    <button type="button" class="car__arrow car__arrow--next" data-car-next aria-label="Próximo serviço"><Icon name="seta" size={22} /></button>
     <div class="car__track" data-car-track>
       {servicos.map((s, i) => (
         <article class:list={['svc', { 'is-on': i === 0 }]} data-svc data-id={s.id} data-publicos={publicosDe(s.id)} aria-roledescription="slide" aria-label={`${i + 1} de ${servicos.length}: ${s.titulo}`}>
@@ -114,14 +112,21 @@ const todos = publicos[0]
   .servicos__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: clamp(32px, 4vw, 56px); }
   .servicos__head .h2 { margin: 0; }
 
-  .car__arrows { display: flex; gap: 10px; flex-shrink: 0; }
+  /* Setas sobre o carrossel: uma em cada lado, centralizadas na altura dos cards */
+  .car { position: relative; }
   .car__arrow {
-    display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; cursor: pointer;
-    border: 1px solid var(--line-2); background: transparent; transition: background-color .3s, color .3s, border-color .3s;
+    position: absolute; top: 50%; z-index: 3; translate: 0 -50%;
+    display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; cursor: pointer;
+    border: 1px solid var(--line-2); color: var(--ink);
+    background: color-mix(in oklab, var(--bg-0), transparent 15%);
+    box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .6);
+    transition: background-color .3s, color .3s, border-color .3s, scale .4s var(--ease-out);
   }
-  .car__arrow:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-  .car__arrow[data-car-prev] :global(svg) { transform: rotate(-135deg); }
-  .car__arrow[data-car-next] :global(svg) { transform: rotate(45deg); }
+  .car__arrow:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); scale: 1.08; }
+  .car__arrow--prev { left: calc(var(--pad) - 30px); }
+  .car__arrow--next { left: calc(var(--pad) + var(--card-w) - 30px); }
+  .car__arrow--prev :global(svg) { transform: rotate(-135deg); }
+  .car__arrow--next :global(svg) { transform: rotate(45deg); }
 
   /* Trilho com rolagem nativa + "snap": desliza leve no dedo e no trackpad */
   .car {
@@ -183,7 +188,10 @@ const todos = publicos[0]
 
   @media (max-width: 760px) {
     .servicos__head { align-items: flex-start; flex-direction: column; }
-    .car__arrows { display: none; }
+    .car__arrow { width: 38px; height: 38px; }
+    .car__arrow :global(svg) { width: 16px; height: 16px; }
+    .car__arrow--prev { left: max(0px, calc(var(--pad) - 19px)); }
+    .car__arrow--next { left: calc(var(--pad) + var(--card-w) - 19px); }
     .car { --card-w: 86vw; }
     .svc { grid-template-columns: 1fr; gap: 20px; }
     .svc__art { width: 80px; }
