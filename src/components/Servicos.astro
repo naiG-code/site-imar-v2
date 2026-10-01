@@ -88,16 +88,25 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
     </div>
   </div>
 
-  <div class="wrap publicos">
-    <h3 class="publicos__title" data-reveal>Para quem a gente trabalha</h3>
-    <div class="publicos__grid">
-      {publicos.map((p, i) => (
-        <article class="pub" data-reveal>
-          <h4>{p.nome}</h4>
-          <p>{p.texto}</p>
-          <ul>{p.servicos.map((id) => <li>{nomeServico[id]}</li>)}</ul>
-        </article>
-      ))}
+  <div class="wrap publicos" data-pub>
+    <p class="publicos__title">Para quem a gente trabalha</p>
+    <div class="publicos__box">
+      <div class="publicos__tabs" role="tablist" aria-label="Para quem a gente trabalha">
+        {publicos.map((p, i) => (
+          <button type="button" role="tab" id={`pub-tab-${i}`} aria-controls={`pub-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'}
+            class:list={['pub__tab', { 'is-on': i === 0 }]} data-pub-tab={i}>
+            {p.nome}<i aria-hidden="true"><b></b></i>
+          </button>
+        ))}
+      </div>
+      <div class="publicos__panels">
+        {publicos.map((p, i) => (
+          <div role="tabpanel" id={`pub-panel-${i}`} aria-labelledby={`pub-tab-${i}`} class:list={['pub__panel', { 'is-on': i === 0 }]} data-pub-panel={i} hidden={i !== 0}>
+            <p>{p.texto}</p>
+            <ul>{p.servicos.map((id) => <li><a href="#contato" data-servico={id}>{nomeServico[id]} <Icon name="seta" size={14} /></a></li>)}</ul>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
@@ -187,25 +196,41 @@ const nomeServico = Object.fromEntries(servicos.map((s) => [s.id, s.titulo]))
   /* ---------- Para quem ---------- */
   .publicos { padding-top: clamp(96px, 12vw, 160px); }
   .publicos__title {
-    margin: 0 0 32px; font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 28px; font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
   }
-  .publicos__grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
-  .pub { padding: 28px 24px 8px 0; }
-  .pub + .pub { padding-left: 24px; border-left: 1px solid var(--line); }
-  .pub h4 {
-    margin: 10px 0 12px; font-family: var(--display); font-weight: 700;
-    font-size: clamp(30px, 3vw, 44px); letter-spacing: -.03em; line-height: 1;
+  .publicos__box { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+
+  /* Nomes grandes: só o ativo fica aceso */
+  .publicos__tabs { display: grid; }
+  .pub__tab {
+    position: relative; display: block; width: fit-content; padding: 10px 0; border: 0; background: none; cursor: pointer; text-align: left;
+    font-family: var(--display); font-weight: 700; font-size: clamp(38px, 5.6vw, 84px); line-height: 1.05; letter-spacing: -.03em;
+    color: var(--line-2); transition: color .5s var(--ease-out), transform .6s var(--ease-out);
   }
-  .pub p { margin: 0; color: var(--muted); font-size: 15px; }
-  .pub ul { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .pub li { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 12px; }
-  @media (max-width: 960px) {
-    .publicos__grid { grid-template-columns: 1fr 1fr; }
-    .pub:nth-child(3) { padding-left: 0; border-left: 0; }
-    .pub { padding-bottom: 28px; }
+  .pub__tab:hover { color: var(--muted); }
+  .pub__tab.is-on { color: var(--ink); transform: translateX(14px); }
+  .pub__tab i { position: absolute; left: 0; bottom: 4px; width: 100%; height: 2px; background: var(--line); overflow: hidden; opacity: 0; transition: opacity .4s; }
+  .pub__tab.is-on i { opacity: 1; }
+  .pub__tab b { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+
+  .publicos__panels { display: grid; }
+  .pub__panel { grid-area: 1 / 1; }
+  .pub__panel p { margin: 0 0 24px; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; max-width: 34ch; }
+  .pub__panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .pub__panel a {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line-2);
+    font-size: 14px; font-weight: 600; text-decoration: none; transition: background-color .3s, color .3s, border-color .3s;
   }
-  @media (max-width: 560px) {
-    .publicos__grid { grid-template-columns: 1fr; }
-    .pub, .pub + .pub { padding-left: 0; border-left: 0; border-bottom: 1px solid var(--line); }
+  .pub__panel a:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+  @media (max-width: 860px) {
+    .publicos__box { grid-template-columns: 1fr; align-items: start; }
+    .publicos__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pub__tab {
+      width: auto; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line-2);
+      font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: 0; color: var(--muted);
+    }
+    .pub__tab.is-on { transform: none; background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    .pub__tab i { display: none; }
   }
 </style>

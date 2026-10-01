@@ -23,6 +23,7 @@ export function iniciar() {
   formulario()
   oceano()
   carrossel()
+  publicos()
 
   if (reduzido) {
     html.classList.add('hero-ready')
@@ -349,6 +350,60 @@ function carrossel() {
   ScrollTrigger.create({ trigger: track, start: 'top 85%', end: 'bottom top', onToggle: (st) => { visivel = st.isActive; atualizarPausa() } })
 
   ativar(0)
+}
+
+/* ---------------- Para quem: troca sozinho entre os públicos ---------------- */
+function publicos() {
+  const box = $('[data-pub]')
+  if (!box) return
+  const tabs = $$<HTMLButtonElement>('[data-pub-tab]', box)
+  const panels = $$('[data-pub-panel]', box)
+  const tempo = 4.5
+  let atual = 0
+  let timer: gsap.core.Tween | null = null
+  let visivel = false
+  let pausado = false
+
+  const ativar = (i: number, animar = true) => {
+    const antes = atual
+    atual = i
+    tabs.forEach((t, k) => {
+      t.classList.toggle('is-on', k === i)
+      t.setAttribute('aria-selected', String(k === i))
+    })
+    panels.forEach((p, k) => {
+      p.hidden = k !== i
+      p.classList.toggle('is-on', k === i)
+    })
+    if (animar && !reduzido && antes !== i) {
+      gsap.fromTo(panels[i].children, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'expo.out', stagger: 0.08 })
+    }
+    reiniciar()
+  }
+  const reiniciar = () => {
+    timer?.kill()
+    timer = null
+    if (reduzido) return
+    const barra = $('b', tabs[atual])
+    timer = gsap.fromTo(barra, { scaleX: 0 }, { scaleX: 1, duration: tempo, ease: 'none', paused: !visivel || pausado, onComplete: () => ativar((atual + 1) % tabs.length) })
+  }
+  const pausa = () => (visivel && !pausado ? timer?.play() : timer?.pause())
+
+  tabs.forEach((t, k) => {
+    t.addEventListener('click', () => ativar(k))
+    t.addEventListener('keydown', (e) => {
+      const d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0
+      if (!d) return
+      e.preventDefault()
+      const n = (k + d + tabs.length) % tabs.length
+      tabs[n].focus()
+      ativar(n)
+    })
+  })
+  box.addEventListener('pointerenter', () => { pausado = true; pausa() })
+  box.addEventListener('pointerleave', () => { pausado = false; pausa() })
+  ScrollTrigger.create({ trigger: box, start: 'top 85%', end: 'bottom top', onToggle: (st) => { visivel = st.isActive; pausa() } })
+  ativar(0, false)
 }
 
 /* ---------------- Método: linha que se desenha ---------------- */
