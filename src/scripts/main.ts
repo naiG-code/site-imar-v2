@@ -22,6 +22,7 @@ export function iniciar() {
   menuMobile()
   formulario()
   oceano()
+  carrossel()
 
   if (reduzido) {
     html.classList.add('hero-ready')
@@ -40,7 +41,6 @@ export function iniciar() {
     palavrasNoScroll()
     revelarImagens()
     contadores(false)
-    servicos()
     etapas()
     decada()
     rodape()
@@ -291,20 +291,77 @@ function letreiros() {
   })
 }
 
-/* ---------------- Serviços: cards sobem e os ícones se desenham ---------------- */
-function servicos() {
-  ScrollTrigger.batch('[data-svc]', {
-    start: 'top 88%',
-    once: true,
-    onEnter: (cards) => {
-      gsap.fromTo(cards, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', stagger: 0.08 })
-      cards.forEach((card, i) => {
-        const paths = $$<SVGGeometryElement>('[data-draw] path, [data-draw] circle', card)
-        paths.forEach((p) => p.setAttribute('pathLength', '1'))
-        gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut', stagger: 0.1, delay: 0.2 + i * 0.08 })
-      })
-    },
-  })
+/* ---------------- Serviços: carrossel ---------------- */
+function carrossel() {
+  const track = $('[data-car-track]')
+  if (!track) return
+  const cards = $$('[data-svc]', track)
+  const dots = $$<HTMLButtonElement>('[data-car-dot]')
+  const tempo = 6 // segundos em cada serviço
+  let atual = 0
+  let timer: gsap.core.Tween | null = null
+  let visivel = false
+  let pausado = false
+
+  const desenhar = (card: HTMLElement) => {
+    if (reduzido) return
+    const paths = $$<SVGGeometryElement>('[data-draw] path, [data-draw] circle', card)
+    paths.forEach((p) => p.setAttribute('pathLength', '1'))
+    gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.08 })
+  }
+
+  const ativar = (i: number) => {
+    atual = i
+    cards.forEach((c, k) => c.classList.toggle('is-on', k === i))
+    dots.forEach((d, k) => {
+      d.classList.toggle('is-on', k === i)
+      d.classList.toggle('is-done', k < i)
+      d.setAttribute('aria-selected', String(k === i))
+      gsap.set($('b', d), { clearProps: 'transform' })
+    })
+    desenhar(cards[i])
+    reiniciarTimer()
+  }
+
+  const ir = (i: number) => {
+    const n = (i + cards.length) % cards.length
+    track.scrollTo({ left: cards[n].offsetLeft - cards[0].offsetLeft })
+    ativar(n)
+  }
+
+  // Troca automática, com a barrinha do indicador enchendo
+  const reiniciarTimer = () => {
+    timer?.kill()
+    timer = null
+    if (reduzido) return
+    const barra = $('b', dots[atual])
+    timer = gsap.fromTo(barra, { scaleX: 0 }, { scaleX: 1, duration: tempo, ease: 'none', paused: !visivel || pausado, onComplete: () => ir(atual + 1) })
+  }
+  const atualizarPausa = () => (visivel && !pausado ? timer?.play() : timer?.pause())
+
+  $('[data-car-prev]')?.addEventListener('click', () => ir(atual - 1))
+  $('[data-car-next]')?.addEventListener('click', () => ir(atual + 1))
+  dots.forEach((d, k) => d.addEventListener('click', () => ir(k)))
+
+  // Arrastar com o dedo/trackpad: descobre qual card ficou em primeiro
+  let espera = 0
+  track.addEventListener('scroll', () => {
+    clearTimeout(espera)
+    espera = window.setTimeout(() => {
+      const passo = cards[1].offsetLeft - cards[0].offsetLeft
+      const i = Math.min(cards.length - 1, Math.round(track.scrollLeft / passo))
+      if (i !== atual) ativar(i)
+    }, 120)
+  }, { passive: true })
+
+  // Pausa com o mouse em cima ou quando a seção sai da tela
+  track.addEventListener('pointerenter', () => { pausado = true; atualizarPausa() })
+  track.addEventListener('pointerleave', () => { pausado = false; atualizarPausa() })
+  track.addEventListener('focusin', () => { pausado = true; atualizarPausa() })
+  track.addEventListener('focusout', () => { pausado = false; atualizarPausa() })
+  ScrollTrigger.create({ trigger: track, start: 'top 85%', end: 'bottom top', onToggle: (st) => { visivel = st.isActive; atualizarPausa() } })
+
+  ativar(0)
 }
 
 /* ---------------- Método: linha que se desenha ---------------- */
