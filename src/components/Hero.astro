@@ -65,6 +65,10 @@ import { url } from '../lib/rotas'
   @media (max-width: 860px) {
     .hero__bottom { grid-template-columns: 1fr; }
   }
+  /* Celular: sem a linha abaixo do título */
+  @media (max-width: 760px) {
+    .hero__bottom { border-top: 0; padding-top: 0; }
+  }
   @media (max-width: 520px) {
     .hero__ctas .btn { flex: 1 1 100%; }
   }

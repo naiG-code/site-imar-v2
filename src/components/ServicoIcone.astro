@@ -1,5 +1,5 @@
 ---
-/* Ícones de linha dos serviços (se desenham com animação quando têm data-draw). */
+/* Ícones de linha dos serviços, com um balanço contínuo e leve (só CSS). */
 import type { Servico } from '../data/servicos'
 interface Props {
   icone: Servico['icone']
@@ -8,7 +8,7 @@ interface Props {
 const { icone, class: cls } = Astro.props
 ---
 
-<svg class={cls} viewBox="0 0 120 120" aria-hidden="true" data-draw>
+<svg class:list={[cls, 'ico-mar']} viewBox="0 0 120 120" aria-hidden="true">
   {icone === 'onda' && (
     <>
       <path d="M10 70c12-14 24-14 36 0s24 14 36 0 24-14 28-6" />
@@ -54,3 +54,13 @@ const { icone, class: cls } = Astro.props
     </>
   )}
 </svg>
+
+<style>
+  /* Flutua devagar, como algo boiando na água. Só "transform": leve para o celular. */
+  .ico-mar { animation: ico-boia 6s ease-in-out infinite; transform-origin: 50% 60%; will-change: transform; }
+  @keyframes ico-boia {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-7px) rotate(-3deg); }
+  }
+  @media (prefers-reduced-motion: reduce) { .ico-mar { animation: none; } }
+</style>

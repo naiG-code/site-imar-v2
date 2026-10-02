@@ -243,12 +243,6 @@ function carrossel() {
   let visivel = false
   let pausado = false
 
-  const desenhar = (card: HTMLElement) => {
-    if (reduzido) return
-    const paths = $$<SVGGeometryElement>('[data-draw] path, [data-draw] circle', card)
-    paths.forEach((p) => p.setAttribute('pathLength', '1'))
-    gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.08 })
-  }
 
   const ativar = (i: number) => {
     atual = i
@@ -259,7 +253,6 @@ function carrossel() {
       d.setAttribute('aria-selected', String(k === i))
       gsap.set($('b', d), { clearProps: 'transform' })
     })
-    if (cards[i]) desenhar(cards[i])
     pausado = !!cards[i] && sobMouse === cards[i]
     reiniciarTimer()
   }
@@ -413,15 +406,9 @@ function servicosLista() {
   window.addEventListener('resize', () => moverBlob(ativo(), false))
   document.fonts.ready.then(() => moverBlob(ativo(), false))
 
-  // Ícones se desenham quando cada serviço aparece
+  // Cada serviço sobe suavemente quando aparece
   if (!reduzido) {
     itens.forEach((it) => {
-      const paths = $$<SVGGeometryElement>('[data-draw] path, [data-draw] circle', it)
-      paths.forEach((p) => p.setAttribute('pathLength', '1'))
-      gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, {
-        strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut', stagger: 0.1,
-        scrollTrigger: { trigger: it, start: 'top 80%', once: true },
-      })
       gsap.fromTo(it, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: it, start: 'top 88%', once: true } })
     })
   }
