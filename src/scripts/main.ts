@@ -41,7 +41,6 @@ export function iniciar() {
     revelarImagens()
     contadores(false)
     etapas()
-    divisores()
     decada()
     rodape()
     ScrollTrigger.refresh()
@@ -425,36 +424,6 @@ function depoimentos() {
   }
   $('[data-dep-prev]')?.addEventListener('click', () => trilho.scrollBy({ left: -passo(), behavior: 'smooth' }))
   $('[data-dep-next]')?.addEventListener('click', () => trilho.scrollBy({ left: passo(), behavior: 'smooth' }))
-}
-
-/* ---------------- Divisórias do mar (página inicial) ---------------- */
-function divisores() {
-  $$('[data-divisor]').forEach((el) => {
-    const rolagem = (inicio: string, fim: string, scrub: number | boolean = true): ScrollTrigger.Vars => ({ trigger: el, start: inicio, end: fim, scrub })
-
-    // A linha de onda se desenha enquanto a divisória entra na tela
-    gsap.fromTo($$('[data-div-onda]', el), { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: 'none', stagger: 0.1, scrollTrigger: rolagem('top 95%', 'top 40%') })
-
-    // Peixes atravessam a tela conforme a rolagem
-    const nado = $('[data-div-nado]', el)
-    if (nado) {
-      const dir = Number(nado.dataset.divNado) || 1
-      const longe = () => innerWidth + 160
-      gsap.fromTo(nado, { x: () => (dir > 0 ? -160 : longe()) }, {
-        x: () => (dir > 0 ? longe() : -160), ease: 'none', immediateRender: true,
-        scrollTrigger: { ...rolagem('top bottom', 'bottom top', 0.6), invalidateOnRefresh: true },
-      })
-    }
-
-    // Bolhas sobem, cada uma com um pequeno atraso
-    $$('[data-div-bolha]', el).forEach((b) => {
-      const atraso = Number(b.dataset.atraso) || 0
-      gsap.fromTo(b, { y: 30, opacity: 0 }, {
-        keyframes: { y: [30, -40, -110], opacity: [0, 0.6, 0] }, ease: 'none',
-        scrollTrigger: rolagem(`top ${95 - atraso * 25}%`, `top ${15 - atraso * 25}%`, 0.4),
-      })
-    })
-  })
 }
 
 /* ---------------- Método: linha que se desenha ---------------- */
