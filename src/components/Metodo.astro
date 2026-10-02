@@ -1,30 +1,13 @@
 ---
-import { metodo, porqueEJ } from '../data/conteudo'
+import { metodo } from '../data/conteudo'
 ---
 
 <section class="section metodo" id="como-trabalhamos">
   <div class="wrap">
-    <div class="metodo__why">
-      <div>
-        <h2 class="h2" data-split>Por que contratar uma <em>Empresa Júnior?</em></h2>
-        <p class="lead" data-reveal>Contratar uma EJ é apoiar o Movimento Empresa Júnior, que forma universitários capazes e comprometidos por meio da educação empreendedora.</p>
-      </div>
-      <div class="why">
-        {porqueEJ.map((p) => (
-          <article class="why__item" data-reveal>
-            <span class="why__sym">{p.simbolo}</span>
-            <div>
-              <h3 class="h3">{p.titulo}</h3>
-              <p class="muted">{p.texto}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-
     <div class="steps" data-steps>
       <div class="steps__head">
-        <h3 class="steps__title" data-split>Do primeiro contato<br />ao <em>resultado</em>.</h3>
+        <h2 class="steps__title" data-split>Do primeiro contato<br />ao <em>resultado</em>.</h2>
+        <p class="lead steps__lead" data-reveal>Um processo simples e transparente, do primeiro papo à entrega final.</p>
       </div>
       <ol class="steps__list">
         <svg class="steps__line" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 2 100">
@@ -47,19 +30,9 @@ import { metodo, porqueEJ } from '../data/conteudo'
 </section>
 
 <style>
-  .metodo__why { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); align-items: start; }
-  .why { display: grid; gap: 12px; }
-  .why__item {
-    display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center;
-    padding: 24px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--card);
-  }
-  .why__sym {
-    font-family: var(--display); font-weight: 700;
-    font-size: 88px; line-height: .8; text-align: center; color: var(--accent-ink);
-  }
-  .why__item p { margin: 8px 0 0; font-size: 15.5px; }
+  .steps__lead { margin-top: 20px; max-width: 34ch; }
 
-  .steps { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(40px, 7vw, 120px); margin-top: clamp(96px, 12vw, 180px); }
+  .steps { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(40px, 7vw, 120px); }
   .steps__head { position: sticky; top: 140px; align-self: start; }
   .steps__title {
     margin: 0; font-family: var(--display); font-weight: 700;
@@ -89,9 +62,7 @@ import { metodo, porqueEJ } from '../data/conteudo'
   .step p { margin: 0; color: var(--muted); max-width: 42ch; }
 
   @media (max-width: 900px) {
-    .metodo__why, .steps { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
     .steps__head { position: static; }
-    .why__item { grid-template-columns: 64px 1fr; }
-    .why__sym { font-size: 64px; }
   }
 </style>
