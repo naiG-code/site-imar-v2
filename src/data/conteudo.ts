@@ -87,8 +87,8 @@ export const publicos = [
  * Vazio = aparece um espaço reservado com ondas.
  */
 export const apresentacao = {
-  imagem: '', // TODO: foto
-  alt: 'Equipe da IMar Júnior',
+  imagem: 'img/apresentacao.jpg',
+  alt: 'Membros da IMar Júnior reunidos em sala de aula segurando a bandeira da empresa',
 }
 
 export const numeros: { valor: number; prefixo?: string; sufixo?: string; rotulo: string; confirmado: boolean }[] = [
