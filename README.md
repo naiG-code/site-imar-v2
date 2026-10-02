@@ -15,7 +15,7 @@ Páginas:
 | Contato (formulário) | `/contato` | `src/pages/contato.astro` |
 | Opções de identidade visual (interna, fora do menu) | `/identidade` | `src/pages/identidade.astro` |
 
-A troca entre páginas tem uma animação de onda (`src/components/Onda.astro`).
+A troca entre páginas usa a transição nativa do navegador (só CSS, em `src/styles/global.css`): a página some e a nova aparece subindo de leve.
 
 ---
 

@@ -16,7 +16,6 @@ const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const ponteiroFino = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
 export function iniciar() {
-  transicaoDePagina()
   ancoras()
   navegacao()
   menuMobile()
@@ -74,61 +73,6 @@ function oceano() {
 function irPara(alvo: number | HTMLElement) {
   const top = typeof alvo === 'number' ? alvo : alvo.getBoundingClientRect().top + scrollY
   window.scrollTo({ top, behavior: reduzido ? 'auto' : 'smooth' })
-}
-
-/* ---------------- Transição entre páginas (onda) ---------------- */
-function transicaoDePagina() {
-  const onda = $('[data-onda]')
-  if (!onda) return
-  const paineis = $$('.onda__p', onda)
-
-  // Chegando de outra página: a onda (que começou cobrindo a tela) sai por cima
-  if (html.classList.contains('onda-entrando')) {
-    gsap.set(paineis, { y: 0, yPercent: 0 })
-    gsap.to(paineis, {
-      yPercent: -120,
-      duration: 1,
-      ease: 'expo.inOut',
-      stagger: { each: 0.12, from: 'end' },
-      delay: 0.1,
-      onComplete: () => {
-        html.classList.remove('onda-entrando')
-        gsap.set(paineis, { clearProps: 'transform' })
-      },
-    })
-  }
-
-  // Voltando pelo botão "voltar" do navegador: garante que a onda não fique na tela
-  window.addEventListener('pageshow', (e) => {
-    if (!e.persisted) return
-    html.classList.remove('onda-entrando', 'onda-saindo')
-    gsap.set(paineis, { clearProps: 'transform' })
-  })
-
-  if (reduzido) return
-  document.addEventListener('click', (e) => {
-    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
-    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]')
-    if (!a || a.target === '_blank' || a.hasAttribute('download')) return
-    const destino = new URL(a.href, location.href)
-    if (destino.origin !== location.origin) return
-    // Mesmo endereço (só muda o #): deixa a rolagem cuidar
-    if (destino.pathname === location.pathname && destino.search === location.search) return
-    e.preventDefault()
-    fecharMenu()
-    try {
-      sessionStorage.setItem('imar-onda', '1')
-    } catch {}
-    html.classList.add('onda-saindo')
-    gsap.fromTo(paineis, { y: 0, yPercent: 115 }, {
-      y: 0,
-      yPercent: 0,
-      duration: 0.75,
-      ease: 'expo.inOut',
-      stagger: 0.1,
-      onComplete: () => location.assign(destino.href),
-    })
-  })
 }
 
 function ancoras() {
