@@ -9,15 +9,21 @@ import Projetos from '../components/Projetos.astro'
 import PorQueResumo from '../components/PorQueResumo.astro'
 import Ods from '../components/Ods.astro'
 import CtaFinal from '../components/CtaFinal.astro'
+import Divisor from '../components/Divisor.astro'
 ---
 
 <Base>
   <Hero />
   <Parceiros />
   <Servicos />
+  <Divisor tipo="cardume" />
   <Numeros comApresentacao />
+  <Divisor tipo="bolhas" />
   <Projetos modo="destaque" />
+  <Divisor tipo="contracorrente" />
   <PorQueResumo />
+  <Divisor tipo="bolhas" />
   <Ods />
+  <Divisor tipo="cardume" />
   <CtaFinal titulo="Vamos construir um projeto juntos?" />
 </Base>

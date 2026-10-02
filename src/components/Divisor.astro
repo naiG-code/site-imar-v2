@@ -1,0 +1,74 @@
+---
+/*
+ * Divisória entre seções com elementos do mar (usada só na página inicial).
+ * A animação acompanha a rolagem: a onda se desenha, os peixes atravessam e as bolhas sobem.
+ * Variações: 'cardume' (peixes para a direita), 'bolhas', 'contracorrente' (peixe para a esquerda).
+ */
+interface Props { tipo?: 'cardume' | 'bolhas' | 'contracorrente' }
+const { tipo = 'cardume' } = Astro.props
+
+// Peixe: corpo + cauda, desenhado olhando para a direita
+const peixe = 'M30 12 C 24 2, 10 2, 4 12 C 10 22, 24 22, 30 12 Z M4 12 L-6 4 L-4 12 L-6 20 Z'
+const onda = 'M0 60 C 120 30 240 30 360 60 S 600 90 720 60 S 960 30 1080 60 S 1320 90 1440 60'
+const onda2 = 'M0 70 C 140 50 260 50 380 70 S 640 95 760 70 S 1000 45 1120 70 S 1340 92 1440 70'
+const bolhas = [
+  { x: 12, r: 7, d: 0 }, { x: 22, r: 4, d: .3 }, { x: 47, r: 9, d: .1 }, { x: 55, r: 5, d: .5 },
+  { x: 71, r: 6.5, d: .2 }, { x: 84, r: 4, d: .6 }, { x: 91, r: 8, d: .35 },
+]
+---
+
+<div class:list={['div-mar', `div-mar--${tipo}`]} data-divisor={tipo} aria-hidden="true">
+  <svg class="div-mar__ondas" viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path class="div-mar__onda" d={onda} pathLength="1" data-div-onda />
+    {tipo !== 'cardume' && <path class="div-mar__onda div-mar__onda--2" d={onda2} pathLength="1" data-div-onda />}
+  </svg>
+
+  {tipo === 'cardume' && (
+    <div class="div-mar__nado" data-div-nado="1">
+      <svg class="div-mar__peixe" style="--s:1; --t:0s" viewBox="-8 0 40 24"><path d={peixe} /></svg>
+      <svg class="div-mar__peixe" style="--s:.7; --t:-.6s; --dy:-26px; --dx:-40px" viewBox="-8 0 40 24"><path d={peixe} /></svg>
+      <svg class="div-mar__peixe" style="--s:.55; --t:-1.2s; --dy:22px; --dx:-70px" viewBox="-8 0 40 24"><path d={peixe} /></svg>
+    </div>
+  )}
+
+  {tipo === 'contracorrente' && (
+    <div class="div-mar__nado div-mar__nado--volta" data-div-nado="-1">
+      <svg class="div-mar__peixe" style="--s:.9; --t:-.3s" viewBox="-8 0 40 24"><path d={peixe} /></svg>
+      <svg class="div-mar__peixe" style="--s:.6; --t:-.9s; --dy:20px; --dx:46px" viewBox="-8 0 40 24"><path d={peixe} /></svg>
+    </div>
+  )}
+
+  {tipo === 'bolhas' && bolhas.map((b) => (
+    <span class="div-mar__bolha" style={`--x:${b.x}%; --r:${b.r}px`} data-div-bolha data-atraso={b.d}></span>
+  ))}
+</div>
+
+<style>
+  .div-mar { position: relative; z-index: 1; height: clamp(90px, 12vw, 150px); overflow: hidden; pointer-events: none; }
+  .div-mar__ondas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .div-mar__onda {
+    fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; opacity: .45;
+    stroke-dasharray: 1; stroke-dashoffset: 0; vector-effect: non-scaling-stroke;
+  }
+  .div-mar__onda--2 { opacity: .25; }
+
+  /* Peixes: o grupo atravessa com a rolagem; cada peixe ainda "nada" sozinho (só CSS) */
+  .div-mar__nado { position: absolute; left: 0; top: 50%; width: 1px; height: 1px; will-change: transform; }
+  .div-mar__peixe {
+    position: absolute; left: var(--dx, 0); top: var(--dy, 0); width: calc(58px * var(--s)); max-width: none; height: auto;
+    fill: var(--accent); opacity: .75; translate: 0 -50%;
+    animation: div-nada 1.8s ease-in-out infinite; animation-delay: var(--t);
+  }
+  .div-mar__nado--volta .div-mar__peixe { scale: -1 1; }
+  @keyframes div-nada { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
+
+  /* Bolhas: sobem com a rolagem */
+  .div-mar__bolha {
+    position: absolute; left: var(--x); bottom: 10px; width: calc(var(--r) * 2); height: calc(var(--r) * 2);
+    border-radius: 50%; border: 1.5px solid var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); opacity: .6; will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .div-mar__peixe { animation: none; }
+  }
+</style>
