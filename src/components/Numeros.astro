@@ -1,42 +1,43 @@
 ---
-/* Números da IMar (contam de 0 até o valor quando aparecem na tela). */
-import { sobre } from '../data/conteudo'
-import { anosDeAtuacao } from '../data/site'
-import { servicos } from '../data/servicos'
+/* Números da IMar (contam de 0 até o valor quando aparecem na tela). Edite em src/data/conteudo.ts */
+import { numeros } from '../data/conteudo'
 
-const numeros = [
-  { valor: 30, prefixo: '+', rotulo: 'projetos realizados' }, // TODO: atualizar quando passar de 30
-  { valor: anosDeAtuacao(), rotulo: 'anos de atuação' },
-  { valor: sobre.cursos.length, rotulo: 'cursos do Instituto do Mar' },
-  { valor: servicos.length, rotulo: 'frentes de serviço' },
-]
+const lista = numeros.filter((n) => n.confirmado || import.meta.env.DEV)
+const casas = (v: number) => (Number.isInteger(v) ? 0 : 1)
+const formatar = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: casas(v), maximumFractionDigits: casas(v) })
 ---
 
-<section class="nums-sec">
-  <div class="wrap">
-    <dl class="sobre__nums">
-      {numeros.map((n) => (
-        <div data-reveal>
-          <dt>{n.rotulo}</dt>
-          <dd>{n.prefixo}<span data-count={n.valor}>{n.valor}</span></dd>
-        </div>
-      ))}
-    </dl>
-  </div>
-</section>
+{lista.length > 0 && (
+  <section class="nums-sec">
+    <div class="wrap">
+      <dl class="sobre__nums" style={`--n:${lista.length}`}>
+        {lista.map((n) => (
+          <div data-reveal>
+            <dt>{n.rotulo}{!n.confirmado && <span class="nums__ex">exemplo</span>}</dt>
+            <dd>{n.prefixo}<span data-count={n.valor} data-casas={casas(n.valor)}>{formatar(n.valor)}</span>{n.sufixo}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+)}
 
 <style>
   .nums-sec { position: relative; z-index: 2; padding: clamp(56px, 8vw, 110px) 0; }
   .sobre__nums {
-    display: grid; grid-template-columns: repeat(4, 1fr); margin: 0;
+    display: grid; grid-template-columns: repeat(var(--n, 4), 1fr); margin: 0;
     border-top: 1px solid var(--line);
   }
-  .sobre__nums div { padding: 28px 20px 0 0; }
+  .sobre__nums div { display: flex; flex-direction: column; padding: 28px 20px 0 0; }
   .sobre__nums div + div { padding-left: 20px; border-left: 1px solid var(--line); }
   .sobre__nums dt { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .nums__ex {
+    margin-left: 8px; padding: 2px 7px; border-radius: 999px; border: 1px dashed var(--accent-ink);
+    color: var(--accent-ink); font-size: 9px; vertical-align: middle;
+  }
   .sobre__nums dd {
-    margin: 10px 0 0; font-family: var(--display); font-weight: 700;
-    font-size: clamp(48px, 7vw, 112px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
+    margin: auto 0 0; padding-top: 10px; font-family: var(--display); font-weight: 700;
+    font-size: clamp(44px, 5.8vw, 96px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
   }
 
   @media (max-width: 960px) {

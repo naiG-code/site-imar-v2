@@ -75,6 +75,19 @@ export const publicos = [
   },
 ]
 
+/*
+ * Números da IMar (página inicial e Quem somos).
+ * `confirmado: false` = número de exemplo: aparece só no seu computador (npm run dev),
+ * com uma etiqueta "exemplo". No site publicado, só aparecem os confirmados.
+ * Depois de colocar o valor real, troque para `confirmado: true`.
+ */
+export const numeros: { valor: number; prefixo?: string; sufixo?: string; rotulo: string; confirmado: boolean }[] = [
+  { valor: 30, prefixo: '+', rotulo: 'projetos realizados', confirmado: true },
+  { valor: 20, prefixo: '+', rotulo: 'clientes atendidos', confirmado: false }, // TODO: número real
+  { valor: 2000, prefixo: '+', rotulo: 'pessoas impactadas', confirmado: false }, // TODO: número real
+  { valor: 4.9, rotulo: 'de satisfação dos clientes', confirmado: false }, // TODO: nota real (de 0 a 5)
+]
+
 export const porqueEJ = [
   { simbolo: '+', titulo: 'Qualidade', texto: 'Projetos feitos por quem estuda o tema a fundo, com a base científica do Instituto do Mar.' },
   { simbolo: '−', titulo: 'Custo', texto: 'Preço abaixo do mercado, sem abrir mão do rigor técnico.' },

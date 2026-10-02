@@ -300,15 +300,18 @@ function revelarImagens() {
 function contadores(imediato: boolean) {
   $$('[data-count]').forEach((el) => {
     const fim = Number(el.dataset.count)
-    if (imediato) return void (el.textContent = String(fim))
+    const casas = Number(el.dataset.casas) || 0
+    // 2000 -> "2.000", 4.9 -> "4,9"
+    const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas })
+    if (imediato) return void (el.textContent = fmt(fim))
     const n = { v: 0 }
-    el.textContent = '0'
+    el.textContent = fmt(0)
     gsap.to(n, {
       v: fim,
-      duration: fim > 100 ? 2.4 : 1.6,
+      duration: fim > 100 ? 2.2 : 1.6,
       ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-      onUpdate: () => (el.textContent = String(Math.round(n.v))),
+      onUpdate: () => (el.textContent = fmt(casas ? n.v : Math.round(n.v))),
     })
   })
 }
