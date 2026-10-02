@@ -1,7 +1,7 @@
 ---
 /* Números da IMar (contam de 0 até o valor quando aparecem na tela). Edite em src/data/conteudo.ts */
 import Icon from './Icon.astro'
-import { numeros } from '../data/conteudo'
+import { numeros, apresentacao } from '../data/conteudo'
 import { url } from '../lib/rotas'
 
 /* comApresentacao: frase sobre a IMar + botão para Quem somos (usado na página inicial) */
@@ -18,10 +18,26 @@ const formatar = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
     <div class="wrap">
       {comApresentacao && (
         <div class="nums__intro">
-          <h2 class="h2" data-split>Estudantes do mar, trabalhando em <em>terra firme</em>.</h2>
-          <div data-reveal>
-            <p class="lead">Somos a Empresa Júnior do Instituto do Mar da Unifesp. Desde 2015, unimos ciência e prática para gerar impacto na sociedade e no meio ambiente.</p>
-            <a class="btn btn--ghost" href={url('quem-somos')} data-magnetic><span>Conheça a IMar Júnior</span><Icon name="seta" /></a>
+          <figure class="nums__foto" data-wave-reveal>
+            {apresentacao.imagem ? (
+              <img src={url(apresentacao.imagem)} alt={apresentacao.alt} loading="lazy" />
+            ) : (
+              <div class="nums__vazio" aria-hidden="true">
+                <svg viewBox="0 0 400 300" preserveAspectRatio="none">
+                  {[0, 1, 2, 3, 4, 5].map((k) => (
+                    <path d={`M0 ${80 + k * 36} C 80 ${50 + k * 36}, 160 ${110 + k * 36}, 240 ${80 + k * 36} S 360 ${50 + k * 36}, 400 ${80 + k * 36}`} style={`--k:${k}`} />
+                  ))}
+                </svg>
+                <span>Foto em breve</span>
+              </div>
+            )}
+          </figure>
+          <div class="nums__texto">
+            <h2 class="h2" data-split>Estudantes do mar, trabalhando em <em>terra firme</em>.</h2>
+            <div data-reveal>
+              <p class="lead">Somos a Empresa Júnior do Instituto do Mar da Unifesp. Desde 2015, unimos ciência e prática para gerar impacto na sociedade e no meio ambiente.</p>
+              <a class="btn btn--ghost" href={url('quem-somos')} data-magnetic><span>Conheça a IMar Júnior</span><Icon name="seta" /></a>
+            </div>
           </div>
         </div>
       )}
@@ -39,9 +55,23 @@ const formatar = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
 
 <style>
   .nums-sec { position: relative; z-index: 2; padding: clamp(56px, 8vw, 110px) 0; }
-  .nums__intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 80px); align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
-  .nums__intro .h2 { margin: 0; }
-  .nums__intro .lead { margin-bottom: 24px; }
+  /* Apresentação: foto + texto, bem separados dos números abaixo */
+  .nums__intro { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; margin-bottom: clamp(80px, 10vw, 150px); }
+  .nums__intro .h2 { margin: 0 0 24px; }
+  .nums__intro .lead { margin-bottom: 28px; }
+  .nums__foto { position: relative; margin: 0; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden; background: var(--card); }
+  .nums__foto img { width: 100%; height: 100%; object-fit: cover; }
+  .nums__vazio {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: radial-gradient(120% 120% at 20% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%), linear-gradient(160deg, var(--wave-3), var(--bg-1));
+  }
+  .nums__vazio svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .nums__vazio path { fill: none; stroke: rgba(255, 255, 255, .4); stroke-width: 1.2; animation: nums-mar 6s ease-in-out infinite alternate; animation-delay: calc(var(--k) * -.7s); }
+  @keyframes nums-mar { from { transform: translateX(-30px); } to { transform: translateX(30px); } }
+  .nums__vazio span {
+    position: relative; padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .5);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #fff;
+  }
   @media (max-width: 860px) { .nums__intro { grid-template-columns: 1fr; } }
   .sobre__nums {
     display: grid; grid-template-columns: repeat(var(--n, 4), 1fr); margin: 0;

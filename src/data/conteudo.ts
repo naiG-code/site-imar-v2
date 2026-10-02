@@ -81,6 +81,16 @@ export const publicos = [
  * com uma etiqueta "exemplo". No site publicado, só aparecem os confirmados.
  * Depois de colocar o valor real, troque para `confirmado: true`.
  */
+/*
+ * Foto da apresentação na página inicial (ao lado de "Estudantes do mar...").
+ * Coloque o arquivo em public/img/ e preencha, ex.: imagem: 'img/apresentacao.jpg'
+ * Vazio = aparece um espaço reservado com ondas.
+ */
+export const apresentacao = {
+  imagem: '', // TODO: foto
+  alt: 'Equipe da IMar Júnior',
+}
+
 export const numeros: { valor: number; prefixo?: string; sufixo?: string; rotulo: string; confirmado: boolean }[] = [
   { valor: 30, prefixo: '+', rotulo: 'projetos realizados', confirmado: true },
   { valor: 20, prefixo: '+', rotulo: 'clientes atendidos', confirmado: false }, // TODO: número real
