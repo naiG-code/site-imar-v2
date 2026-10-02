@@ -15,7 +15,8 @@ export const hero = {
 export const valores = ['Transparência', 'Resiliência', 'Ética', 'Protagonismo', 'Inconformismo', 'União', 'Proatividade']
 
 export const sobre = {
-  titulo: 'Estudantes do mar, trabalhando em terra firme.',
+  /** A palavra entre [colchetes] aparece em azul. */
+  titulo: 'Nascemos para [conectar] a universidade ao mercado',
   texto: [
     'Fundada em 2015, a IMar Júnior é uma Empresa Júnior comprometida com soluções capazes de gerar impacto na sociedade e no meio ambiente. Somos vinculados ao Instituto do Mar da Universidade Federal de São Paulo (Unifesp), no campus Baixada Santista.',
     'Acreditamos que o futuro é construído por meio da sustentabilidade, da inovação e do compromisso com a sociedade. Desenvolvemos soluções que unem o conhecimento acadêmico à prática empresarial para gerar impacto positivo e impulsionar o mercado de amanhã.',
@@ -176,9 +177,10 @@ export const ods = [
 ]
 
 export const facaParte = {
-  titulo: 'É aluno do Instituto do Mar?',
+  /** A palavra entre [colchetes] aparece em destaque. */
+  titulo: 'Seu lugar também é [aqui]',
   texto:
-    'BICT Mar, Engenharia Ambiental, Engenharia de Petróleo ou Oceanografia: venha viver o Movimento Empresa Júnior com a gente. Acompanhe o Instagram para saber quando abre o próximo processo seletivo.',
+    'Se você estuda BICT Mar, Engenharia Ambiental, Engenharia de Petróleo ou Oceanografia no Instituto do Mar, venha viver o Movimento Empresa Júnior com a gente. Acompanhe o Instagram para saber quando abre o próximo processo seletivo.',
 }
 
 export const contato = {

@@ -12,7 +12,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
       <img class="fp__img" src={`${base}img/evento.jpg`} alt="Membros da IMar Júnior em um encontro do Movimento Empresa Júnior" loading="lazy" />
       <div class="fp__shade" aria-hidden="true"></div>
       <div class="fp__content">
-        <h2 class="fp__title">{facaParte.titulo}</h2>
+        <h2 class="fp__title" set:html={facaParte.titulo.replace(/\[(.+?)\]/, '<em>$1</em>')} />
         <p>{facaParte.texto}</p>
         <a class="btn btn--primary" href={site.redes.instagram.url} target="_blank" rel="noopener" data-magnetic>
           <Icon name="instagram" /><span>Seguir {site.redes.instagram.usuario}</span>
@@ -32,6 +32,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
     margin: 0 0 18px; font-family: var(--display); font-weight: 700;
     font-size: clamp(40px, 5.4vw, 80px); line-height: .98; letter-spacing: -.04em;
   }
+  .fp__title :global(em) { font-style: normal; color: var(--wave-2); }
   .fp__content p { color: #c3d5e8; margin: 0 0 28px; }
   .fp__content .btn--primary::before { background: #eaf4fb; }
   .fp__content .btn--primary:hover { color: #02121f; }
