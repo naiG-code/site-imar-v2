@@ -25,10 +25,6 @@ const links = paginas.map((p) => ({ ...p, href: url(p.href), ativo: url(p.href).
     </nav>
 
     <div class="nav__actions">
-      <button class="nav__theme" type="button" data-theme-toggle aria-label="Alternar modo claro e escuro">
-        <Icon name="sol" class="i-sol" />
-        <Icon name="lua" class="i-lua" />
-      </button>
       <a class="btn btn--primary nav__cta" href={url('contato')} data-magnetic>
         <span>Agendar reunião</span><Icon name="seta" />
       </a>
@@ -97,18 +93,10 @@ const links = paginas.map((p) => ({ ...p, href: url(p.href), ativo: url(p.href).
   .nav__links a:hover .nav__roll > span, .nav__links a:hover .nav__roll::after { transform: translateY(-100%); }
 
   .nav__actions { display: flex; align-items: center; gap: 8px; }
-  .nav__theme, .nav__burger {
+  .nav__burger {
     display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
     border: 1px solid var(--line-2); background: transparent; cursor: pointer;
     transition: background-color .3s, transform .5s var(--ease-out);
-  }
-  .nav__theme:hover { background: var(--card-2); transform: rotate(25deg); }
-  .nav__theme :global(.i-sol) { display: none; }
-  :global([data-theme='light']) .nav__theme :global(.i-sol) { display: block; }
-  :global([data-theme='light']) .nav__theme :global(.i-lua) { display: none; }
-  @media (prefers-color-scheme: light) {
-    :global(:root:not([data-theme='dark'])) .nav__theme :global(.i-sol) { display: block; }
-    :global(:root:not([data-theme='dark'])) .nav__theme :global(.i-lua) { display: none; }
   }
   .nav__cta { --h: 46px; padding: 0 20px; font-size: 14px; }
   .nav__burger { display: none; }

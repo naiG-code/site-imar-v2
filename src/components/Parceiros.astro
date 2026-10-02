@@ -40,16 +40,12 @@ const faixa = Array.from({ length: Math.max(2, Math.ceil(12 / parceiros.length))
   @keyframes parc-rola { to { transform: translateX(-100%); } }
 
   .parc__item { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 clamp(28px, 4vw, 56px); }
-  /* Logos ficam monocromáticos (brancos no escuro, pretos no claro) para combinar com o site */
+  /* Logos ficam monocromáticos (cinza-escuro) para combinar com o site */
   .parc__item img {
     height: calc(40px * var(--k, 1)); width: auto; max-width: 200px; object-fit: contain;
-    filter: grayscale(1) brightness(0) invert(1); opacity: .7; transition: filter .4s, opacity .4s;
+    filter: grayscale(1) brightness(0); opacity: .6; transition: filter .4s, opacity .4s;
   }
   .parc__item:hover img { opacity: 1; }
-  :global([data-theme='light']) .parc__item img { filter: grayscale(1) brightness(0); }
-  @media (prefers-color-scheme: light) {
-    :global(:root:not([data-theme='dark'])) .parc__item img { filter: grayscale(1) brightness(0); }
-  }
   .parc__nome {
     font-family: var(--display); font-weight: 700;
     font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -.03em; white-space: nowrap; color: var(--muted);

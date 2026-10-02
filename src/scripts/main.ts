@@ -18,7 +18,6 @@ const ponteiroFino = window.matchMedia('(hover: hover) and (pointer: fine)').mat
 export function iniciar() {
   transicaoDePagina()
   ancoras()
-  tema()
   navegacao()
   menuMobile()
   formulario()
@@ -146,36 +145,6 @@ function ancoras() {
     fecharMenu()
     irPara(alvo as number | HTMLElement)
     history.replaceState(null, '', id === '#topo' ? location.pathname : id)
-  })
-}
-
-/* ---------------- Tema claro/escuro ---------------- */
-function tema() {
-  const btn = $('[data-theme-toggle]')
-  if (!btn) return
-  const atual = () =>
-    html.dataset.theme ?? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
-
-  btn.addEventListener('click', (e) => {
-    const novo = atual() === 'light' ? 'dark' : 'light'
-    const aplicar = () => {
-      html.dataset.theme = novo
-      try {
-        localStorage.setItem('imar-tema', novo)
-      } catch {}
-      window.dispatchEvent(new Event('imar:tema'))
-    }
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } }
-    if (!doc.startViewTransition || reduzido) return aplicar()
-
-    const { clientX: x, clientY: y } = e as MouseEvent
-    const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
-    doc.startViewTransition(aplicar).ready.then(() => {
-      html.animate(
-        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
-        { duration: 900, easing: 'cubic-bezier(.7,0,.2,1)', pseudoElement: '::view-transition-new(root)' },
-      )
-    })
   })
 }
 

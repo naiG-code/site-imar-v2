@@ -94,9 +94,7 @@ const fontes = [
 <script>
   const board = document.querySelector<HTMLElement>('[data-board]')!
   const escolha = document.querySelector<HTMLElement>('[data-escolha]')!
-  const light = () =>
-    document.documentElement.dataset.theme === 'light' ||
-    (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: light)').matches)
+  const light = () => true // o site agora é só no modo claro
 
   let acc = { hex: '#5AB8FF', claro: '#1663B5', nome: 'Azul-celeste' }
   let font = 'MADE TOMMY'

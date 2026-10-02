@@ -27,7 +27,7 @@ const ogImage = new URL(`${base}img/equipe.jpg`, Astro.site)
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" href={`${base}favicon.png`} />
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
-    <meta name="theme-color" content="#050f22" />
+    <meta name="theme-color" content="#f5fafe" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
@@ -36,12 +36,10 @@ const ogImage = new URL(`${base}img/equipe.jpg`, Astro.site)
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Aplica o tema salvo antes de pintar a tela (evita "piscar") -->
+    <!-- Prepara as animações antes de pintar a tela (evita "piscar") -->
     <script is:inline>
       document.documentElement.classList.add('js')
       try {
-        const t = localStorage.getItem('imar-tema')
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
         // Chegou por um link interno: a onda começa cobrindo a tela e sai
         if (sessionStorage.getItem('imar-onda')) {
           sessionStorage.removeItem('imar-onda')
