@@ -2,26 +2,23 @@
 import Icon from './Icon.astro'
 import { site, whatsappLink } from '../data/site'
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
-const links = [
-  { href: '#sobre', label: 'Quem somos' },
-  { href: '#servicos', label: 'Serviços' },
-  { href: '#metodo', label: 'Método' },
-  { href: '#projetos', label: 'Projetos' },
-  { href: '#contato', label: 'Contato' },
-]
+import { base, url, paginas } from '../lib/rotas'
+
+// Marca a página atual no menu
+const atual = Astro.url.pathname.replace(/\/$/, '')
+const links = paginas.map((p) => ({ ...p, href: url(p.href), ativo: url(p.href).replace(/\/$/, '') === atual }))
 ---
 
 <header class="nav" data-nav>
   <div class="nav__bar">
-    <a class="nav__brand" href="#topo" aria-label="IMar Júnior, voltar ao topo">
+    <a class="nav__brand" href={url()} aria-label="IMar Júnior, página inicial">
       <img src={`${base}img/logo.png`} alt="" width="36" height="36" />
       <span>IMar <i>Júnior</i></span>
     </a>
 
-    <nav class="nav__links" aria-label="Seções">
-      {links.map((l, i) => (
-        <a href={l.href} data-nav-link>
+    <nav class="nav__links" aria-label="Páginas">
+      {links.map((l) => (
+        <a href={l.href} class:list={{ 'is-active': l.ativo }} aria-current={l.ativo ? 'page' : undefined}>
           <span class="nav__roll" data-text={l.label}><span>{l.label}</span></span>
         </a>
       ))}
@@ -32,7 +29,7 @@ const links = [
         <Icon name="sol" class="i-sol" />
         <Icon name="lua" class="i-lua" />
       </button>
-      <a class="btn btn--primary nav__cta" href="#contato" data-magnetic>
+      <a class="btn btn--primary nav__cta" href={url('contato')} data-magnetic>
         <span>Agendar reunião</span><Icon name="seta" />
       </a>
       <button class="nav__burger" type="button" data-menu-open aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
@@ -48,7 +45,7 @@ const links = [
     <button class="menu__close" type="button" data-menu-close aria-label="Fechar menu"><Icon name="fechar" size={24} /></button>
     <nav aria-label="Menu">
       {links.map((l, i) => (
-        <a href={l.href} data-menu-link><span>{l.label}</span></a>
+        <a href={l.href} data-menu-link class:list={{ 'is-active': l.ativo }} aria-current={l.ativo ? 'page' : undefined}><span>{l.label}</span></a>
       ))}
     </nav>
     <div class="menu__foot" data-menu-link>
@@ -87,11 +84,13 @@ const links = [
 
   .nav__links { display: flex; gap: 6px; }
   .nav__links a {
+    position: relative;
     display: flex; align-items: baseline; gap: 6px; padding: 10px 12px; text-decoration: none;
     font-size: 14px; font-weight: 600;
   }
   .nav__links small { font-family: var(--mono); font-size: 10px; color: var(--muted); }
-  .nav__links a.is-active small { color: var(--accent-ink); }
+  .nav__links a.is-active { color: var(--accent-ink); }
+  .nav__links a.is-active::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px; border-radius: 2px; background: var(--accent); }
   .nav__roll { position: relative; display: inline-block; overflow: hidden; vertical-align: bottom; }
   .nav__roll > span, .nav__roll::after { display: block; transition: transform .5s var(--ease-out); }
   .nav__roll::after { content: attr(data-text); position: absolute; left: 0; top: 100%; color: var(--accent-ink); }
@@ -141,6 +140,7 @@ const links = [
     font-family: var(--display); font-weight: 700; font-size: clamp(42px, 11vw, 80px);
     line-height: 1.05; letter-spacing: -.04em;
   }
+  .menu nav a.is-active { color: var(--accent-ink); }
   .menu nav a small { font-family: var(--mono); font-size: 12px; color: var(--accent-ink); letter-spacing: 0; }
   .menu__foot { display: grid; gap: 8px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
   .menu__foot a { text-decoration: none; }

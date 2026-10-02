@@ -1,0 +1,38 @@
+---
+/* Versão curta de "Por que contratar uma EJ" para a página inicial. */
+import Icon from './Icon.astro'
+import { porqueEJ } from '../data/conteudo'
+import { url } from '../lib/rotas'
+---
+
+<section class="section pq">
+  <div class="wrap">
+    <div class="pq__head">
+      <h2 class="h2" data-split>Por que contratar uma <em>Empresa Júnior?</em></h2>
+      <a class="btn btn--ghost" href={`${url('servicos')}#como-trabalhamos`} data-magnetic><span>Como trabalhamos</span><Icon name="seta" /></a>
+    </div>
+    <div class="pq__grid">
+      {porqueEJ.map((p) => (
+        <article class="pq__item" data-reveal>
+          <span class="pq__sym" aria-hidden="true">{p.simbolo}</span>
+          <h3 class="h3">{p.titulo}</h3>
+          <p class="muted">{p.texto}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pq__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(32px, 4vw, 56px); }
+  .pq__head .h2 { margin: 0; max-width: 14ch; }
+  .pq__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pq__item {
+    position: relative; overflow: hidden; padding: clamp(24px, 3vw, 40px); border-radius: var(--radius);
+    border: 1px solid var(--line); background: var(--card); transition: border-color .4s, transform .5s var(--ease-out);
+  }
+  .pq__item:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); transform: translateY(-6px); }
+  .pq__sym { display: block; font-family: var(--display); font-weight: 700; font-size: 72px; line-height: 1; color: var(--accent-ink); margin-bottom: 20px; }
+  .pq__item p { margin: 10px 0 0; }
+  @media (max-width: 860px) { .pq__grid { grid-template-columns: 1fr; } }
+</style>

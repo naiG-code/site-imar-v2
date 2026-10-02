@@ -1,6 +1,10 @@
 ---
 import '../styles/global.css'
 import { site } from '../data/site'
+import Nav from '../components/Nav.astro'
+import Footer from '../components/Footer.astro'
+import Ambient from '../components/Ambient.astro'
+import Onda from '../components/Onda.astro'
 
 interface Props {
   title?: string
@@ -38,9 +42,12 @@ const ogImage = new URL(`${base}img/equipe.jpg`, Astro.site)
       try {
         const t = localStorage.getItem('imar-tema')
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
-        if (sessionStorage.getItem('imar-visitou')) document.documentElement.classList.add('ja-visitou')
+        // Chegou por um link interno: a onda começa cobrindo a tela e sai
+        if (sessionStorage.getItem('imar-onda')) {
+          sessionStorage.removeItem('imar-onda')
+          if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('onda-entrando')
+        }
       } catch (e) {}
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('ja-visitou')
     </script>
 
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -56,6 +63,16 @@ const ogImage = new URL(`${base}img/equipe.jpg`, Astro.site)
   </head>
   <body>
     <a class="skip" href="#conteudo">Pular para o conteúdo</a>
-    <slot />
+    <Onda />
+    <Ambient />
+    <Nav />
+    <main id="conteudo">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import { iniciar } from '../scripts/main'
+      iniciar()
+    </script>
   </body>
 </html>

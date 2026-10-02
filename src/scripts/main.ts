@@ -16,6 +16,7 @@ const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const ponteiroFino = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
 export function iniciar() {
+  transicaoDePagina()
   ancoras()
   tema()
   navegacao()
@@ -23,6 +24,8 @@ export function iniciar() {
   formulario()
   oceano()
   carrossel()
+  servicosLista()
+  depoimentos()
 
   if (reduzido) {
     html.classList.add('hero-ready')
@@ -74,11 +77,68 @@ function irPara(alvo: number | HTMLElement) {
   window.scrollTo({ top, behavior: reduzido ? 'auto' : 'smooth' })
 }
 
+/* ---------------- Transição entre páginas (onda) ---------------- */
+function transicaoDePagina() {
+  const onda = $('[data-onda]')
+  if (!onda) return
+  const paineis = $$('.onda__p', onda)
+
+  // Chegando de outra página: a onda (que começou cobrindo a tela) sai por cima
+  if (html.classList.contains('onda-entrando')) {
+    gsap.set(paineis, { y: 0, yPercent: 0 })
+    gsap.to(paineis, {
+      yPercent: -120,
+      duration: 1,
+      ease: 'expo.inOut',
+      stagger: { each: 0.12, from: 'end' },
+      delay: 0.1,
+      onComplete: () => {
+        html.classList.remove('onda-entrando')
+        gsap.set(paineis, { clearProps: 'transform' })
+      },
+    })
+  }
+
+  // Voltando pelo botão "voltar" do navegador: garante que a onda não fique na tela
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return
+    html.classList.remove('onda-entrando', 'onda-saindo')
+    gsap.set(paineis, { clearProps: 'transform' })
+  })
+
+  if (reduzido) return
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]')
+    if (!a || a.target === '_blank' || a.hasAttribute('download')) return
+    const destino = new URL(a.href, location.href)
+    if (destino.origin !== location.origin) return
+    // Mesmo endereço (só muda o #): deixa a rolagem cuidar
+    if (destino.pathname === location.pathname && destino.search === location.search) return
+    e.preventDefault()
+    fecharMenu()
+    try {
+      sessionStorage.setItem('imar-onda', '1')
+    } catch {}
+    html.classList.add('onda-saindo')
+    gsap.fromTo(paineis, { y: 0, yPercent: 115 }, {
+      y: 0,
+      yPercent: 0,
+      duration: 0.75,
+      ease: 'expo.inOut',
+      stagger: 0.1,
+      onComplete: () => location.assign(destino.href),
+    })
+  })
+}
+
 function ancoras() {
   document.addEventListener('click', (e) => {
-    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]')
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="#"]')
     if (!a) return
-    const id = a.getAttribute('href')!
+    const destino = new URL(a.href, location.href)
+    if (destino.pathname !== location.pathname || destino.search !== location.search) return
+    const id = destino.hash
     if (id === '#' || id === '#conteudo') return
     const alvo = id === '#topo' ? 0 : $(id)
     if (alvo === null) return
@@ -131,18 +191,6 @@ function navegacao() {
     ultimo = y
   }
   window.addEventListener('scroll', () => aoRolar(scrollY), { passive: true })
-
-  const links = $$<HTMLAnchorElement>('[data-nav-link]')
-  links.forEach((a) => {
-    const sec = $(a.getAttribute('href')!)
-    if (!sec) return
-    ScrollTrigger.create({
-      trigger: sec,
-      start: 'top 50%',
-      end: 'bottom 50%',
-      onToggle: (st) => a.classList.toggle('is-active', st.isActive),
-    })
-  })
 }
 
 let fecharMenu = () => {}
@@ -405,6 +453,76 @@ function carrossel() {
   ativar(0)
 }
 
+/* ---------------- Página de Serviços: filtro "Você é" ---------------- */
+function servicosLista() {
+  const grupo = $('[data-lista-filtro]')
+  if (!grupo) return
+  const botoes = $$<HTMLButtonElement>('[data-lista-btn]', grupo)
+  const blob = $('[data-lista-blob]', grupo)
+  const texto = $('[data-lista-texto]')
+  const itens = $$('[data-lista-item]')
+
+  const moverBlob = (b: HTMLElement, animar = true) => {
+    if (!blob) return
+    if (!animar) blob.style.transition = 'none'
+    blob.style.width = `${b.offsetWidth}px`
+    blob.style.height = `${b.offsetHeight}px`
+    blob.style.transform = `translate(${b.offsetLeft}px, ${b.offsetTop}px)`
+    if (!animar) requestAnimationFrame(() => (blob.style.transition = ''))
+  }
+
+  const filtrar = (b: HTMLButtonElement) => {
+    botoes.forEach((x) => {
+      x.classList.toggle('is-on', x === b)
+      x.setAttribute('aria-checked', String(x === b))
+    })
+    moverBlob(b)
+    if (texto) {
+      if (reduzido) texto.textContent = b.dataset.texto ?? ''
+      else gsap.timeline()
+        .to(texto, { opacity: 0, y: -8, duration: 0.2 })
+        .add(() => void (texto.textContent = b.dataset.texto ?? ''))
+        .to(texto, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' })
+    }
+    const ids = (b.dataset.servicos ?? '').split(' ').filter(Boolean)
+    itens.forEach((it) => it.classList.toggle('is-out', ids.length > 0 && !ids.includes(it.dataset.id ?? '')))
+    const visiveis = itens.filter((it) => !it.classList.contains('is-out'))
+    if (!reduzido) gsap.fromTo(visiveis, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.07, clearProps: 'transform,opacity' })
+    ScrollTrigger.refresh()
+  }
+
+  botoes.forEach((b) => b.addEventListener('click', () => filtrar(b)))
+  const ativo = () => botoes.find((b) => b.classList.contains('is-on')) ?? botoes[0]
+  moverBlob(ativo(), false)
+  window.addEventListener('resize', () => moverBlob(ativo(), false))
+  document.fonts.ready.then(() => moverBlob(ativo(), false))
+
+  // Ícones se desenham quando cada serviço aparece
+  if (!reduzido) {
+    itens.forEach((it) => {
+      const paths = $$<SVGGeometryElement>('[data-draw] path, [data-draw] circle', it)
+      paths.forEach((p) => p.setAttribute('pathLength', '1'))
+      gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, {
+        strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut', stagger: 0.1,
+        scrollTrigger: { trigger: it, start: 'top 80%', once: true },
+      })
+      gsap.fromTo(it, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: it, start: 'top 88%', once: true } })
+    })
+  }
+}
+
+/* ---------------- Depoimentos: setas do carrossel ---------------- */
+function depoimentos() {
+  const trilho = $('[data-dep-track]')
+  if (!trilho) return
+  const passo = () => {
+    const c = trilho.firstElementChild as HTMLElement | null
+    return c ? c.offsetWidth + 20 : 400
+  }
+  $('[data-dep-prev]')?.addEventListener('click', () => trilho.scrollBy({ left: -passo(), behavior: 'smooth' }))
+  $('[data-dep-next]')?.addEventListener('click', () => trilho.scrollBy({ left: passo(), behavior: 'smooth' }))
+}
+
 /* ---------------- Método: linha que se desenha ---------------- */
 function etapas() {
   const list = $('.steps__list')
@@ -465,6 +583,13 @@ function formulario() {
   const hud = $('[data-form-hud]', form)!
   const select = $<HTMLSelectElement>('[data-form-servico]', form)!
   const botao = $<HTMLButtonElement>('button[type=submit]', form)!
+
+  // Veio de "Quero esse serviço" em outra página (?servico=pgrs): já escolhe o serviço
+  const pedido = new URLSearchParams(location.search).get('servico')
+  if (pedido) {
+    const opt = $$<HTMLOptionElement>('option', select).find((o) => o.dataset.id === pedido)
+    if (opt) select.value = opt.value
+  }
 
   // "Quero esse serviço" já escolhe o serviço no formulário
   $$<HTMLAnchorElement>('[data-servico]').forEach((a) =>

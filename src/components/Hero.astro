@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro'
 import { hero } from '../data/conteudo'
+import { url } from '../lib/rotas'
 ---
 
 <section class="hero" id="topo" data-hero>
@@ -23,7 +24,7 @@ import { hero } from '../data/conteudo'
     <div class="hero__bottom">
       <p class="lead" data-hero-in>{hero.texto}</p>
       <div class="hero__ctas" data-hero-in>
-        <a class="btn btn--primary" href="#contato" data-magnetic><span>Solicitar diagnóstico</span><Icon name="seta" /></a>
+        <a class="btn btn--primary" href={url('contato')} data-magnetic><span>Solicitar diagnóstico</span><Icon name="seta" /></a>
         <a class="btn btn--ghost" href="#servicos" data-magnetic><span>Ver serviços</span></a>
       </div>
     </div>
@@ -49,11 +50,6 @@ import { hero } from '../data/conteudo'
   .hero__title { font-size: clamp(46px, 8.8vw, 156px); margin-bottom: clamp(32px, 4vw, 56px); }
   .hero__line { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
   .hero__in { display: inline-block; }
-  /* Estado inicial da animação de entrada (com fallback caso o JS falhe) */
-  :global(.js) .hero__in { transform: translateY(110%); animation: hero-safe 0s 5s forwards; }
-  :global(.js) [data-hero-in] { opacity: 0; animation: hero-safe 0s 5s forwards; }
-  :global(.hero-ready) .hero__in, :global(.hero-ready) [data-hero-in] { animation: none; }
-  @keyframes hero-safe { to { transform: none; opacity: 1; } }
 
   .hero__rotator { position: relative; display: inline-grid; vertical-align: top; }
   .hero__rotator em { grid-area: 1 / 1; white-space: nowrap; opacity: 0; }

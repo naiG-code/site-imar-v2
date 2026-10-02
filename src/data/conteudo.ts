@@ -17,7 +17,8 @@ export const valores = ['Transparência', 'Resiliência', 'Ética', 'Protagonism
 export const sobre = {
   titulo: 'Estudantes do mar, trabalhando em terra firme.',
   texto: [
-    'Fundada em 2015, a IMar Júnior é vinculada ao Instituto do Mar da Universidade Federal de São Paulo, no campus Baixada Santista.',
+    'Fundada em 2015, a IMar Júnior é uma Empresa Júnior comprometida com soluções capazes de gerar impacto na sociedade e no meio ambiente. Somos vinculados ao Instituto do Mar da Universidade Federal de São Paulo (Unifesp), no campus Baixada Santista.',
+    'Acreditamos que o futuro é construído por meio da sustentabilidade, da inovação e do compromisso com a sociedade. Desenvolvemos soluções que unem o conhecimento acadêmico à prática empresarial para gerar impacto positivo e impulsionar o mercado de amanhã.',
   ],
   cursos: [
     { sigla: 'BICT', nome: 'Ciência e Tecnologia do Mar' },
@@ -88,43 +89,41 @@ export const metodo = [
 ]
 
 /*
- * Projetos em destaque.
+ * Projetos realizados (página Projetos; o primeiro com `destaque: true` aparece na página inicial).
  * Para trocar a foto: coloque o arquivo em public/img/ e mude `imagem`.
  * Sem `imagem`, o card mostra uma arte de ondas.
  * Se a foto for vertical, ajuste `foco` para escolher a parte que aparece no card.
+ * `galeria` recebe mais fotos do projeto: [{ src: 'img/projetos/foto.jpg', alt: 'descrição' }]
  */
-export const projetos: {
+export type Projeto = {
   tag: string
   titulo: string
   local: string
+  ano?: number
   texto: string
   parceiros: string
   imagem?: string
   alt?: string
   /** Qual parte da foto aparece quando ela é cortada (ex.: '50% 80%' = centro, mais para baixo). */
   foco?: string
-}[] = [
+  galeria?: { src: string; alt: string }[]
+  destaque?: boolean
+}
+
+export const projetos: Projeto[] = [
   {
     tag: 'Educação Ambiental',
     titulo: 'Feira de Educação Ambiental',
     local: 'Cultura Inglesa',
-    // TODO: conteúdo real — confirmar texto, cidade e público
+    // TODO: conteúdo real — confirmar texto, cidade, ano e público
     texto:
-      'Em parceria com a Cultura Inglesa, levamos o oceano para dentro da escola: uma feira de educação ambiental com estações interativas, experimentos e muita conversa sobre o mar e o consumo consciente.',
+      'Em parceria com a Cultura Inglesa, levamos o oceano para dentro da escola: uma feira de educação ambiental com estações interativas, experimentos e muita conversa sobre o mar e o consumo consciente. O painel "O oceano em nossas mãos" reuniu as marcas de quem passou por lá.',
     parceiros: 'Parceria · Cultura Inglesa',
     imagem: 'img/feira-cultura-inglesa.jpg',
     alt: 'Equipe da IMar Júnior na Cultura Inglesa segurando o painel "O oceano em nossas mãos" com marcas de mãos azuis',
     foco: '50% 78%',
-  },
-  {
-    tag: 'Comunidade',
-    titulo: 'Ilha Diana',
-    local: 'Santos · SP',
-    texto:
-      'Junto com a IO Jr. e o IPT, desenvolvemos um projeto para reduzir a vulnerabilidade socioambiental e melhorar as condições ambientais da comunidade da Ilha Diana, formada por pescadores artesanais.',
-    parceiros: 'Parceria · IO Jr. · IPT',
-    imagem: 'img/banner-time.jpg',
-    alt: 'Membros da IMar Júnior segurando a bandeira da empresa',
+    galeria: [], // TODO: mais fotos da feira
+    destaque: true,
   },
 ]
 

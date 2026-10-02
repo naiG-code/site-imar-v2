@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import Projetos from '../components/Projetos.astro'
+import Parceiros from '../components/Parceiros.astro'
+import CtaFinal from '../components/CtaFinal.astro'
+---
+
+<Base title="Projetos · IMar Júnior" description="Projetos de educação ambiental, gestão de resíduos e sustentabilidade realizados pela IMar Júnior na Baixada Santista.">
+  <PageHero
+    titulo="Projetos que"
+    destaque="fizemos"
+    texto="Ciência aplicada, perto da comunidade e do mar. Conheça alguns dos trabalhos que a IMar Júnior já realizou."
+  />
+  <Projetos modo="todos" />
+  <Parceiros />
+  <CtaFinal titulo="O próximo projeto pode ser o seu." />
+</Base>

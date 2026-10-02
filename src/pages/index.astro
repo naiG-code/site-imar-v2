@@ -1,37 +1,23 @@
 ---
+/* Página inicial (landing): resumo de tudo, com botões para as outras páginas. */
 import Base from '../layouts/Base.astro'
-import Ambient from '../components/Ambient.astro'
-import Nav from '../components/Nav.astro'
 import Hero from '../components/Hero.astro'
 import Parceiros from '../components/Parceiros.astro'
-import Sobre from '../components/Sobre.astro'
 import Servicos from '../components/Servicos.astro'
-import Metodo from '../components/Metodo.astro'
+import Numeros from '../components/Numeros.astro'
 import Projetos from '../components/Projetos.astro'
-import Ods from '../components/Ods.astro'
-import FacaParte from '../components/FacaParte.astro'
-import Contato from '../components/Contato.astro'
-import Footer from '../components/Footer.astro'
+import PorQueResumo from '../components/PorQueResumo.astro'
+import Depoimentos from '../components/Depoimentos.astro'
+import CtaFinal from '../components/CtaFinal.astro'
 ---
 
 <Base>
-  <Ambient />
-  <Nav />
-  <main id="conteudo">
-    <Hero />
-    <Parceiros />
-    <Sobre />
-    <Servicos />
-    <Metodo />
-    <Projetos />
-    <Ods />
-    <FacaParte />
-    <Contato />
-  </main>
-  <Footer />
+  <Hero />
+  <Parceiros />
+  <Servicos />
+  <Numeros />
+  <Projetos modo="destaque" />
+  <PorQueResumo />
+  <Depoimentos />
+  <CtaFinal titulo="Vamos construir um projeto juntos?" />
 </Base>
-
-<script>
-  import { iniciar } from '../scripts/main'
-  iniciar()
-</script>

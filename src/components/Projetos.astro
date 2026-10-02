@@ -1,15 +1,28 @@
 ---
+/*
+ * Projetos. modo="destaque": só o projeto em destaque + botão para a página (página inicial).
+ * modo="todos": todos os projetos, com galeria de fotos (página Projetos).
+ */
+import Icon from './Icon.astro'
 import { projetos } from '../data/conteudo'
+import { base, url } from '../lib/rotas'
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
+interface Props { modo?: 'destaque' | 'todos' }
+const { modo = 'todos' } = Astro.props
+const lista = modo === 'destaque' ? projetos.filter((p) => p.destaque).slice(0, 1) : projetos
 ---
 
 <section class="section projetos" id="projetos">
   <div class="wrap">
-    <h2 class="h2" data-split>Ciência aplicada, perto da <em>comunidade</em> e do mar.</h2>
+    {modo === 'destaque' && (
+      <div class="proj__head">
+        <h2 class="h2" data-split>Ciência aplicada, perto da <em>comunidade</em> e do mar.</h2>
+        <a class="btn btn--ghost" href={url('projetos')} data-magnetic><span>Ver todos os projetos</span><Icon name="seta" /></a>
+      </div>
+    )}
 
     <div class="proj__list">
-      {projetos.map((p, i) => (
+      {lista.map((p, i) => (
         <article class:list={['proj', { 'proj--flip': i % 2 === 1 }]}>
           <figure class="proj__media" data-wave-reveal>
             {p.imagem ? (
@@ -31,16 +44,42 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
             <p class="muted">{p.texto}</p>
             <p class="proj__parc">{p.parceiros}</p>
           </div>
+          {modo === 'todos' && p.galeria && p.galeria.length > 0 && (
+            <ul class="proj__galeria">
+              {p.galeria.map((g) => (
+                <li data-reveal><img src={`${base}${g.src}`} alt={g.alt} loading="lazy" /></li>
+              ))}
+            </ul>
+          )}
         </article>
       ))}
     </div>
+    {modo === 'todos' && (
+      <aside class="proj__breve" data-reveal>
+        <span class="proj__breve-onda" aria-hidden="true"></span>
+        <p><b>Mais projetos chegando.</b> Estamos organizando as fotos e os registros dos outros projetos que já fizemos.</p>
+      </aside>
+    )}
   </div>
-
-
 </section>
 
 <style>
+  .proj__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .proj__head .h2 { margin: 0; max-width: 16ch; }
   .proj__list { display: grid; gap: clamp(80px, 10vw, 160px); margin-top: clamp(56px, 7vw, 100px); }
+  .projetos:not(:has(.proj__head)) .proj__list { margin-top: 0; }
+  .proj__galeria { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .proj__galeria li { aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: var(--card); }
+  .proj__galeria img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-out); }
+  .proj__galeria li:hover img { transform: scale(1.06); }
+  .proj__breve {
+    position: relative; overflow: hidden; display: flex; align-items: center; gap: 18px; margin-top: clamp(64px, 8vw, 120px);
+    padding: 24px 28px; border-radius: var(--radius); border: 1px dashed var(--line-2); color: var(--muted);
+  }
+  .proj__breve p { margin: 0; }
+  .proj__breve b { color: var(--ink); }
+  .proj__breve-onda { flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 var(--accent); animation: breve 2.2s infinite; }
+  @keyframes breve { to { box-shadow: 0 0 0 14px transparent; } }
   .proj { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
   .proj--flip .proj__media { order: 2; }
 

@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import Contato from '../components/Contato.astro'
+import { contato } from '../data/conteudo'
+---
+
+<Base title="Contato · IMar Júnior" description="Agende uma reunião com a IMar Júnior. Fale pelo formulário, WhatsApp, e-mail ou redes sociais.">
+  <PageHero titulo="Vamos" destaque="conversar?" texto={contato.texto} />
+  <Contato comTitulo={false} />
+</Base>

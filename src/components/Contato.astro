@@ -12,13 +12,22 @@ const canais = [
   { icone: 'tiktok', rotulo: 'TikTok', valor: site.redes.tiktok.usuario, href: site.redes.tiktok.url, externo: true },
 ] as const
 const perfis = ['Empresa', 'Escola', 'Evento', 'Organização']
+
+interface Props { comTitulo?: boolean }
+const { comTitulo = true } = Astro.props
 ---
 
 <section class="section contato" id="contato">
   <div class="wrap contato__grid">
     <div class="contato__info">
-      <h2 class="h2" data-split>{contato.titulo}</h2>
-      <p class="lead" data-reveal>{contato.texto}</p>
+      {comTitulo ? (
+        <>
+          <h2 class="h2" data-split>{contato.titulo}</h2>
+          <p class="lead" data-reveal>{contato.texto}</p>
+        </>
+      ) : (
+        <h2 class="contato__sub" data-reveal>Fale direto com a gente</h2>
+      )}
 
       <ul class="canais">
         {canais.map((c) => (
@@ -34,7 +43,7 @@ const perfis = ['Empresa', 'Escola', 'Evento', 'Organização']
       </ul>
     </div>
 
-    <form class="form" data-form data-key={site.web3formsKey} data-email={site.email} novalidate>
+    <form class="form" id="formulario" data-form data-key={site.web3formsKey} data-email={site.email} novalidate>
       <div class="form__hud" aria-hidden="true">
         <span>Transmissão</span>
         <span data-form-hud><i class="pulse-dot"></i> Aguardando</span>
@@ -81,9 +90,10 @@ const perfis = ['Empresa', 'Escola', 'Evento', 'Organização']
 </section>
 
 <style>
+  .contato__sub { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(26px, 2.6vw, 36px); letter-spacing: -.02em; }
   .contato__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); align-items: start; }
 
-  .canais { list-style: none; padding: 0; margin: 48px 0 0; border-top: 1px solid var(--line); }
+  .canais { list-style: none; padding: 0; margin: 32px 0 0; border-top: 1px solid var(--line); }
   .canais li { border-bottom: 1px solid var(--line); }
   .canais a {
     position: relative; display: grid; grid-template-columns: 24px 110px 1fr 20px; align-items: center; gap: 16px;

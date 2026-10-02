@@ -1,0 +1,61 @@
+---
+/* Equipe da gestão atual. Edite em src/data/equipe.ts */
+import Icon from './Icon.astro'
+import { equipe } from '../data/equipe'
+import { url } from '../lib/rotas'
+
+const iniciais = (n: string) => n.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase()
+---
+
+<section class="section equipe" id="equipe">
+  <div class="wrap">
+    <div class="equipe__head">
+      <h2 class="h2" data-split>Quem faz a <em>IMar</em> acontecer</h2>
+      <p class="lead" data-reveal>Estudantes de quatro cursos do Instituto do Mar, unidos para transformar ciência em soluções.</p>
+    </div>
+    <ul class="equipe__grid">
+      {equipe.map((m) => (
+        <li class="membro" data-reveal>
+          <div class="membro__foto">
+            {m.foto ? (
+              <img src={url(m.foto)} alt={`Foto de ${m.nome}`} loading="lazy" width="600" height="600" />
+            ) : (
+              <span class="membro__vazio" aria-hidden="true">
+                <svg viewBox="0 0 80 80"><circle cx="40" cy="30" r="14" /><path d="M14 72c4-16 14-22 26-22s22 6 26 22" /></svg>
+                {m.nome !== 'Nome' && <b>{iniciais(m.nome)}</b>}
+              </span>
+            )}
+          </div>
+          <p class="membro__nome">{m.nome}</p>
+          <p class="membro__cargo">{m.cargo}</p>
+          {m.linkedin && (
+            <a class="membro__in" href={m.linkedin} target="_blank" rel="noopener" aria-label={`LinkedIn de ${m.nome}`}><Icon name="linkedin" size={16} /></a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .equipe__head { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
+  .equipe__head .h2 { margin: 0; }
+  .equipe__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .membro { position: relative; }
+  .membro__foto {
+    aspect-ratio: 1; border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; border: 1px solid var(--line);
+    background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, var(--card)), var(--card));
+  }
+  .membro__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-out); }
+  .membro:hover .membro__foto img { transform: scale(1.05); }
+  .membro__vazio { position: relative; display: grid; place-items: center; width: 100%; height: 100%; }
+  .membro__vazio svg { width: 42%; fill: none; stroke: var(--line-2); stroke-width: 2; stroke-linecap: round; }
+  .membro__vazio b { position: absolute; font-family: var(--display); font-size: 28px; color: var(--muted); }
+  .membro__nome { margin: 0; font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -.01em; }
+  .membro__cargo { margin: 2px 0 0; font-size: 14px; color: var(--accent-ink); }
+  .membro__in { position: absolute; right: 12px; top: 12px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--glass); }
+  @media (max-width: 960px) {
+    .equipe__head { grid-template-columns: 1fr; }
+    .equipe__grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  }
+</style>

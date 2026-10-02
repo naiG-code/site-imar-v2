@@ -213,6 +213,12 @@ main, footer { position: relative; z-index: 2; }
 .rc-mask { padding: .14em .06em .2em; margin: -.14em -.06em -.2em; }
 .split-word, .split-char { display: inline-block; will-change: transform; }
 
+/* Entrada do topo das páginas (com fallback caso o JS falhe) */
+.js .hero__in { transform: translateY(110%); animation: hero-safe 0s 5s forwards; }
+.js [data-hero-in] { opacity: 0; animation: hero-safe 0s 5s forwards; }
+.hero-ready .hero__in, .hero-ready [data-hero-in] { animation: none; }
+@keyframes hero-safe { to { transform: none; opacity: 1; } }
+
 /* Elementos que o JS anima entram escondidos só quando o JS está ativo */
 .js [data-reveal] { opacity: 0; }
 

@@ -1,0 +1,97 @@
+---
+/* Página de Serviços: todos os serviços com o texto completo, filtrados por público. */
+import Icon from './Icon.astro'
+import ServicoIcone from './ServicoIcone.astro'
+import { servicos } from '../data/servicos'
+import { publicos } from '../data/conteudo'
+import { contatoServico } from '../lib/rotas'
+
+const publicosDe = (id: string) =>
+  publicos.filter((p) => p.servicos.includes(id)).map((p) => p.id).join(' ')
+---
+
+<section class="section sl" id="lista">
+  <div class="wrap">
+    <div class="sl__filtro" data-reveal>
+      <p class="sl__label" id="sl-label">Você é</p>
+      <div class="sl__pills" role="radiogroup" aria-labelledby="sl-label" data-lista-filtro>
+        {publicos.map((p, i) => (
+          <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} class:list={['sl__pill', { 'is-on': i === 0 }]}
+            data-lista-btn data-servicos={p.servicos.join(' ')} data-texto={p.texto}>
+            {p.nome}
+          </button>
+        ))}
+        <span class="sl__blob" data-lista-blob aria-hidden="true"></span>
+      </div>
+      <p class="sl__texto" data-lista-texto aria-live="polite">{publicos[0].texto}</p>
+    </div>
+
+    <div class="sl__lista">
+      {servicos.map((s, i) => (
+        <article class="sl__item" id={s.id} data-lista-item data-id={s.id} data-publicos={publicosDe(s.id)}>
+          <div class="sl__arte">
+            <span class="sl__num">0{i + 1}</span>
+            <ServicoIcone icone={s.icone} class="sl__icone" />
+            {s.selo && <span class="sl__selo">{s.selo}</span>}
+          </div>
+          <div class="sl__corpo">
+            <p class="sl__para">{s.paraQuem}</p>
+            <h2 class="sl__titulo">{s.titulo}</h2>
+            <p class="sl__desc">{s.descricao}</p>
+            <ul class="sl__pontos">{s.pontos.map((p) => <li>{p}</li>)}</ul>
+            <a class="btn btn--primary sl__cta" href={contatoServico(s.id)} data-magnetic><span>Quero esse serviço</span><Icon name="seta" /></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sl { padding-top: clamp(56px, 7vw, 96px); }
+  .sl__filtro { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px; margin-bottom: clamp(40px, 5vw, 72px); }
+  .sl__label { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .sl__pills { position: relative; display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  .sl__pill {
+    position: relative; z-index: 1; padding: 10px 18px; border: 0; border-radius: 999px; background: none; cursor: pointer;
+    font-size: 14px; font-weight: 600; color: var(--muted); transition: color .4s;
+  }
+  .sl__pill:hover { color: var(--ink); }
+  .sl__pill.is-on { color: var(--on-accent); }
+  .sl__blob { position: absolute; z-index: 0; left: 0; top: 0; border-radius: 999px; background: var(--accent); transition: transform .6s var(--ease-out), width .6s var(--ease-out), height .6s var(--ease-out); }
+  .sl__texto { flex-basis: 100%; margin: 0; color: var(--muted); max-width: 60ch; }
+
+  .sl__lista { display: grid; gap: 20px; }
+  .sl__item {
+    display: grid; grid-template-columns: minmax(220px, .7fr) 1.6fr; gap: clamp(24px, 4vw, 64px); align-items: center;
+    padding: clamp(24px, 3.5vw, 48px); border-radius: calc(var(--radius) + 6px); border: 1px solid var(--line); background: var(--card);
+    scroll-margin-top: 110px; transition: border-color .5s;
+  }
+  .sl__item:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .sl__item.is-out { display: none; }
+  .sl__arte {
+    position: relative; display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--radius);
+    background: radial-gradient(80% 80% at 30% 20%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%), var(--bg-0);
+    border: 1px solid var(--line);
+  }
+  .sl__arte :global(.sl__icone) { width: 52%; fill: none; stroke: var(--accent-ink); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; transition: transform .8s var(--ease-out); }
+  .sl__item:hover :global(.sl__icone) { transform: translateY(-6px) rotate(-4deg) scale(1.05); }
+  .sl__num { position: absolute; left: 18px; top: 14px; font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--muted); }
+  .sl__selo {
+    position: absolute; right: 14px; top: 14px; padding: 5px 10px; border-radius: 999px; background: var(--accent); color: var(--on-accent);
+    font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  }
+  .sl__para { margin: 0 0 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .sl__titulo { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(30px, 3.6vw, 52px); line-height: 1.02; letter-spacing: -.03em; }
+  .sl__desc { margin: 18px 0 0; color: var(--muted); max-width: 62ch; }
+  .sl__pontos { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .sl__pontos li { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 13.5px; font-weight: 600; }
+  .sl__cta { margin-top: 28px; --h: 50px; }
+
+  @media (max-width: 860px) {
+    .sl__item { grid-template-columns: 1fr; }
+    .sl__arte { aspect-ratio: 16 / 9; }
+    .sl__arte :global(.sl__icone) { width: 30%; }
+    .sl__pills { border-radius: 22px; }
+  }
+</style>

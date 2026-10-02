@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro'
 import { site } from '../data/site'
+import { url, paginas } from '../lib/rotas'
 
 const ano = new Date().getFullYear()
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
@@ -20,7 +21,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
       <nav class="foot__cols" aria-label="Rodapé">
         <div>
           <h3>Navegue</h3>
-          <a href="#sobre">Quem somos</a><a href="#servicos">Serviços</a><a href="#metodo">Método</a><a href="#projetos">Projetos</a><a href="#contato">Contato</a>
+          {paginas.map((p) => <a href={url(p.href)}>{p.label}</a>)}
         </div>
         <div>
           <h3>Redes</h3>

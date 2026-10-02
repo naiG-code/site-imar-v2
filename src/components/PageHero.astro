@@ -1,0 +1,45 @@
+---
+/*
+ * Topo simples das páginas internas: título grande, texto curto e ondas animadas leves.
+ * Uso: <PageHero titulo="Quem" destaque="somos" texto="..." />
+ */
+interface Props {
+  rotulo?: string
+  titulo: string
+  destaque?: string
+  texto?: string
+}
+const { rotulo, titulo, destaque, texto } = Astro.props
+const linhas = [0, 1, 2, 3, 4, 5, 6]
+---
+
+<section class="ph">
+  <svg class="ph__ondas" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
+    {linhas.map((k) => (
+      <path d={`M-40 ${120 + k * 34} C 300 ${70 + k * 34}, 520 ${190 + k * 34}, 760 ${130 + k * 34} S 1220 ${70 + k * 34}, 1480 ${140 + k * 34}`} style={`--k:${k}`} />
+    ))}
+  </svg>
+  <div class="wrap ph__in">
+    {rotulo && <p class="eyebrow" data-hero-in>{rotulo}</p>}
+    <h1 class="display ph__titulo" data-hero-title>
+      <span class="hero__line"><span class="hero__in">{titulo}{destaque && <> <em>{destaque}</em></>}</span></span>
+    </h1>
+    {texto && <p class="lead ph__texto" data-hero-in>{texto}</p>}
+  </div>
+</section>
+
+<style>
+  .ph { position: relative; overflow: hidden; padding: clamp(150px, 20vw, 220px) 0 clamp(56px, 7vw, 96px); border-bottom: 1px solid var(--line); }
+  .ph__ondas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .ph__ondas path {
+    fill: none; stroke: var(--accent); stroke-width: 1; opacity: calc(.06 + var(--k) * .025);
+    animation: ph-mar 9s ease-in-out infinite alternate; animation-delay: calc(var(--k) * -1.1s);
+  }
+  @keyframes ph-mar { from { transform: translateX(-40px); } to { transform: translateX(40px); } }
+  .ph__in { position: relative; }
+  .ph__titulo { font-size: clamp(44px, 8vw, 120px); margin-bottom: clamp(28px, 3vw, 44px); }
+  .ph__titulo :global(.hero__line) { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+  .ph__titulo :global(.hero__in) { display: inline-block; }
+  .ph__texto { max-width: 56ch; }
+  @media (prefers-reduced-motion: reduce) { .ph__ondas path { animation: none; } }
+</style>

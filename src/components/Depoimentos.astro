@@ -1,0 +1,82 @@
+---
+/*
+ * Carrossel de depoimentos. Edite em src/data/depoimentos.ts
+ * Sem depoimentos: aparece com espaços reservados só no seu computador (npm run dev)
+ * e fica escondido no site publicado.
+ */
+import Icon from './Icon.astro'
+import { depoimentos, type Depoimento } from '../data/depoimentos'
+import { url } from '../lib/rotas'
+
+const vazio = depoimentos.length === 0
+const mostrar = !vazio || import.meta.env.DEV
+const reservado: Depoimento = {
+  texto: 'Espaço reservado para um depoimento de cliente. Adicione em src/data/depoimentos.ts.',
+  autor: 'Nome',
+  cargo: 'Cargo',
+  organizacao: 'Organização',
+}
+const itens = vazio ? [reservado, reservado, reservado] : depoimentos
+---
+
+{mostrar && (
+  <section class="section dep" aria-labelledby="dep-titulo">
+    <div class="wrap">
+      <div class="dep__head">
+        <h2 class="h2" id="dep-titulo" data-split>Quem já <em>mergulhou</em> com a gente</h2>
+        <div class="dep__setas">
+          <button type="button" class="dep__seta dep__seta--prev" data-dep-prev aria-label="Depoimento anterior"><Icon name="seta" size={20} /></button>
+          <button type="button" class="dep__seta" data-dep-next aria-label="Próximo depoimento"><Icon name="seta" size={20} /></button>
+        </div>
+      </div>
+      {vazio && <p class="dep__aviso">Visível só no seu computador enquanto não houver depoimentos.</p>}
+    </div>
+    <div class="dep__trilho" data-dep-track>
+      {itens.map((d) => (
+        <figure class:list={['dep__card', { 'is-vazio': vazio }]}>
+          <svg class="dep__aspas" viewBox="0 0 40 30" aria-hidden="true"><path d="M0 30V17C0 7 6 1 16 0v6c-5 1-8 5-8 10h8v14H0Zm24 0V17c0-10 6-16 16-17v6c-5 1-8 5-8 10h8v14H24Z" /></svg>
+          <blockquote>{d.texto}</blockquote>
+          <figcaption>
+            <span class="dep__foto">{d.foto && <img src={url(d.foto)} alt="" loading="lazy" />}</span>
+            <span><b>{d.autor}</b><small>{d.cargo} · {d.organizacao}</small></span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .dep__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: clamp(28px, 4vw, 48px); }
+  .dep__head .h2 { margin: 0; max-width: 14ch; }
+  .dep__setas { display: flex; gap: 10px; }
+  .dep__seta {
+    display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; cursor: pointer;
+    border: 1px solid var(--line-2); background: transparent; transition: background-color .3s, color .3s, border-color .3s;
+  }
+  .dep__seta:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .dep__seta :global(svg) { transform: rotate(45deg); }
+  .dep__seta--prev :global(svg) { transform: rotate(-135deg); }
+  .dep__aviso { margin: -20px 0 24px; font-size: 13px; color: var(--muted); }
+
+  .dep__trilho {
+    --pad: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
+    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    padding: 4px var(--pad); scroll-padding-inline-start: var(--pad); scrollbar-width: none;
+  }
+  .dep__trilho::-webkit-scrollbar { display: none; }
+  .dep__card {
+    flex: 0 0 min(520px, 84vw); scroll-snap-align: start; margin: 0; display: flex; flex-direction: column; gap: 24px;
+    padding: clamp(24px, 3vw, 40px); border-radius: var(--radius); border: 1px solid var(--line); background: var(--card);
+  }
+  .dep__card.is-vazio { border-style: dashed; }
+  .dep__aspas { width: 40px; fill: var(--accent); opacity: .7; }
+  .dep__card blockquote { margin: 0; flex: 1; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.55; }
+  .dep__card.is-vazio blockquote { color: var(--muted); }
+  .dep__card figcaption { display: flex; align-items: center; gap: 14px; }
+  .dep__foto { width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background: var(--card-2); border: 1px solid var(--line); }
+  .dep__foto img { width: 100%; height: 100%; object-fit: cover; }
+  .dep__card b { display: block; font-family: var(--display); font-size: 17px; }
+  .dep__card small { color: var(--muted); font-size: 13px; }
+  @media (max-width: 640px) { .dep__setas { display: none; } }
+</style>

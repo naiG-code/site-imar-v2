@@ -1,15 +1,7 @@
 ---
 import { sobre, valores } from '../data/conteudo'
-import { anosDeAtuacao } from '../data/site'
-import { servicos } from '../data/servicos'
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
-const numeros = [
-  { valor: 30, prefixo: '+', rotulo: 'projetos realizados' }, // TODO: atualizar quando passar de 30
-  { valor: anosDeAtuacao(), rotulo: 'anos de atuação' },
-  { valor: sobre.cursos.length, rotulo: 'cursos do Instituto do Mar' },
-  { valor: servicos.length, rotulo: 'frentes de serviço' },
-]
 ---
 
 <section class="section sobre" id="sobre">
@@ -43,15 +35,6 @@ const numeros = [
         <ul>{valores.map((v) => <li>{v}</li>)}</ul>
       </article>
     </div>
-
-    <dl class="sobre__nums">
-      {numeros.map((n) => (
-        <div data-reveal>
-          <dt>{n.rotulo}</dt>
-          <dd>{n.prefixo}<span data-count={n.valor}>{n.valor}</span></dd>
-        </div>
-      ))}
-    </dl>
   </div>
 </section>
 
@@ -80,21 +63,7 @@ const numeros = [
   .card ul li:not(:last-child)::after { content: ' ·'; color: var(--accent-ink); }
   .card--accent { background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 18%, transparent), var(--card)); }
 
-  .sobre__nums {
-    display: grid; grid-template-columns: repeat(4, 1fr); margin: clamp(64px, 8vw, 120px) 0 0;
-    border-top: 1px solid var(--line);
-  }
-  .sobre__nums div { padding: 28px 20px 0 0; }
-  .sobre__nums div + div { padding-left: 20px; border-left: 1px solid var(--line); }
-  .sobre__nums dt { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .sobre__nums dd {
-    margin: 10px 0 0; font-family: var(--display); font-weight: 700;
-    font-size: clamp(48px, 7vw, 112px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
-  }
-
   @media (max-width: 960px) {
     .sobre__grid, .sobre__mv { grid-template-columns: 1fr; }
-    .sobre__nums { grid-template-columns: 1fr 1fr; row-gap: 32px; }
-    .sobre__nums div:nth-child(3) { padding-left: 0; border-left: 0; }
   }
 </style>

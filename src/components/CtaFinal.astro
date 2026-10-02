@@ -1,0 +1,41 @@
+---
+/* Chamada final das páginas: leva ao Contato e ao WhatsApp (sem formulário). */
+import Icon from './Icon.astro'
+import { url } from '../lib/rotas'
+import { whatsappLink } from '../data/site'
+import { contato } from '../data/conteudo'
+
+interface Props { titulo?: string; texto?: string }
+const { titulo = contato.titulo, texto = contato.texto } = Astro.props
+---
+
+<section class="cta">
+  <div class="wrap">
+    <div class="cta__box" data-reveal>
+      <svg class="cta__onda" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 120 C 200 60 400 180 600 120 S 1000 60 1200 120 L1200 200 L0 200 Z" />
+        <path d="M0 150 C 220 100 420 200 620 150 S 1000 100 1200 150 L1200 200 L0 200 Z" />
+      </svg>
+      <h2 class="h2 cta__titulo">{titulo}</h2>
+      <p class="lead">{texto}</p>
+      <div class="cta__btns">
+        <a class="btn btn--primary" href={url('contato')} data-magnetic><span>Agendar reunião</span><Icon name="seta" /></a>
+        <a class="btn btn--ghost" href={whatsappLink()} target="_blank" rel="noopener" data-magnetic><Icon name="whatsapp" /><span>Chamar no WhatsApp</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { position: relative; z-index: 2; padding: clamp(72px, 10vw, 140px) 0 0; }
+  .cta__box {
+    position: relative; overflow: hidden; padding: clamp(36px, 6vw, 88px); border-radius: calc(var(--radius) + 10px);
+    border: 1px solid var(--line); background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--accent) 18%, transparent), var(--card) 60%);
+  }
+  .cta__onda { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 45%; pointer-events: none; }
+  .cta__onda path { fill: var(--accent); opacity: .06; }
+  .cta__onda path + path { opacity: .08; }
+  .cta__titulo, .cta .lead, .cta__btns { position: relative; }
+  .cta__titulo { max-width: 16ch; }
+  .cta__btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+</style>

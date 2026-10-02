@@ -10,6 +10,8 @@ export default defineConfig({
   site: process.env.SITE_URL || 'https://imarjunior.github.io',
   base: process.env.BASE_PATH || '/',
   trailingSlash: 'ignore',
+  // Carrega a próxima página quando o mouse passa no link: a troca fica quase instantânea
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   build: { inlineStylesheets: 'auto' },
   devToolbar: { enabled: false },
   // O Three.js (oceano 3D) é grande, mas é carregado à parte, depois do resto da página

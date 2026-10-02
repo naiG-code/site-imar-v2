@@ -4,8 +4,18 @@ Nova proposta do site da **IMar Júnior**, Empresa Júnior do Instituto do Mar d
 
 Feito com **Astro** (organização e build), **GSAP** (animações de rolagem), **Lenis** (rolagem suave) e **Three.js** (oceano 3D do topo). O site é 100% estático e roda de graça no GitHub Pages.
 
-- Página principal: `/`
-- Opções de identidade visual (cores e fontes para a diretoria escolher): `/identidade`
+Páginas:
+
+| Página | Endereço | Arquivo |
+| --- | --- | --- |
+| Início (landing, com o oceano 3D) | `/` | `src/pages/index.astro` |
+| Quem somos (+ equipe e Faça parte) | `/quem-somos` | `src/pages/quem-somos.astro` |
+| Serviços (+ método e ODS) | `/servicos` | `src/pages/servicos.astro` |
+| Projetos | `/projetos` | `src/pages/projetos.astro` |
+| Contato (formulário) | `/contato` | `src/pages/contato.astro` |
+| Opções de identidade visual (interna, fora do menu) | `/identidade` | `src/pages/identidade.astro` |
+
+A troca entre páginas tem uma animação de onda (`src/components/Onda.astro`).
 
 ---
 
@@ -36,7 +46,9 @@ Todo o conteúdo fica em **`src/data/`**:
 | -------------- | --------------------------------------------------------------------------- |
 | `site.ts`      | E-mail, WhatsApp, redes sociais, ano de fundação, chave do formulário       |
 | `servicos.ts`  | Os 6 serviços (aparecem nos cards **e** no formulário automaticamente)      |
-| `conteudo.ts`  | Hero, quem somos, missão/visão, público, método, projetos, parceiros, ODS   |
+| `conteudo.ts`  | Hero, quem somos, missão/visão, públicos, método, projetos, parceiros, ODS  |
+| `equipe.ts`    | Membros da equipe (nome, cargo, foto em `public/img/equipe/`)               |
+| `depoimentos.ts` | Depoimentos de clientes (carrossel da página inicial)                    |
 
 Regras de ouro: edite só o texto entre aspas `'assim'`, não apague vírgulas, chaves `{ }` ou colchetes `[ ]`. Para adicionar um item, copie um bloco `{ ... },` inteiro.
 

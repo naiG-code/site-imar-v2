@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import ServicosLista from '../components/ServicosLista.astro'
+import Metodo from '../components/Metodo.astro'
+import Ods from '../components/Ods.astro'
+import CtaFinal from '../components/CtaFinal.astro'
+---
+
+<Base title="Serviços · IMar Júnior" description="Consultoria ESG, Educação Ambiental, PGRS, Coffee Break Sustentável, Licenciamento Ambiental e projetos personalizados para empresas, escolas, eventos e organizações da Baixada Santista.">
+  <PageHero
+    titulo="Soluções ambientais para o seu"
+    destaque="negócio"
+    texto="Serviços voltados para ajudar empresas, escolas, organizações e eventos a adotar práticas sustentáveis, com a base científica do Instituto do Mar e preço de Empresa Júnior."
+  />
+  <ServicosLista />
+  <Metodo />
+  <Ods />
+  <CtaFinal titulo="Não achou o que precisa?" texto="Também desenvolvemos projetos personalizados em sustentabilidade. Conte o seu desafio e a gente constrói a solução com você." />
+</Base>

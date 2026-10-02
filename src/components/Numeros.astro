@@ -1,0 +1,46 @@
+---
+/* Números da IMar (contam de 0 até o valor quando aparecem na tela). */
+import { sobre } from '../data/conteudo'
+import { anosDeAtuacao } from '../data/site'
+import { servicos } from '../data/servicos'
+
+const numeros = [
+  { valor: 30, prefixo: '+', rotulo: 'projetos realizados' }, // TODO: atualizar quando passar de 30
+  { valor: anosDeAtuacao(), rotulo: 'anos de atuação' },
+  { valor: sobre.cursos.length, rotulo: 'cursos do Instituto do Mar' },
+  { valor: servicos.length, rotulo: 'frentes de serviço' },
+]
+---
+
+<section class="nums-sec">
+  <div class="wrap">
+    <dl class="sobre__nums">
+      {numeros.map((n) => (
+        <div data-reveal>
+          <dt>{n.rotulo}</dt>
+          <dd>{n.prefixo}<span data-count={n.valor}>{n.valor}</span></dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .nums-sec { position: relative; z-index: 2; padding: clamp(56px, 8vw, 110px) 0; }
+  .sobre__nums {
+    display: grid; grid-template-columns: repeat(4, 1fr); margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .sobre__nums div { padding: 28px 20px 0 0; }
+  .sobre__nums div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+  .sobre__nums dt { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .sobre__nums dd {
+    margin: 10px 0 0; font-family: var(--display); font-weight: 700;
+    font-size: clamp(48px, 7vw, 112px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 960px) {
+    .sobre__nums { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+    .sobre__nums div:nth-child(3) { padding-left: 0; border-left: 0; }
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHero from '../components/PageHero.astro'
+import Sobre from '../components/Sobre.astro'
+import Numeros from '../components/Numeros.astro'
+import Equipe from '../components/Equipe.astro'
+import FacaParte from '../components/FacaParte.astro'
+import CtaFinal from '../components/CtaFinal.astro'
+---
+
+<Base title="Quem somos · IMar Júnior" description="Conheça a IMar Júnior, Empresa Júnior do Instituto do Mar da Unifesp: nossa história, missão, visão, valores e equipe.">
+  <PageHero
+    titulo="Quem"
+    destaque="somos"
+    texto="Uma Empresa Júnior formada por estudantes do Instituto do Mar da Unifesp, que une ciência e prática para gerar impacto na sociedade e no meio ambiente."
+  />
+  <Sobre />
+  <Numeros />
+  <Equipe />
+  <FacaParte />
+  <CtaFinal />
+</Base>
