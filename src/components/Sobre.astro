@@ -54,10 +54,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/')
   .card {
     position: relative; padding: clamp(24px, 3vw, 40px); border-radius: var(--radius);
     border: 1px solid var(--line);
-    /* Mesmo fundo azulado nos três cards (missão, visão e valores) */
-    background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 18%, transparent), var(--card));
+    /* Mesma cor nos três cards (missão, visão e valores) */
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-0));
   }
-  .card p { margin: 22px 0 0; font-size: 17px; }
+  .card p { margin: 22px 0 0; font-size: 17px; font-weight: 500; color: var(--ink); }
   .card ul { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .card ul li {
     font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -.02em;
