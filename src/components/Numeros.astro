@@ -1,15 +1,30 @@
 ---
 /* Números da IMar (contam de 0 até o valor quando aparecem na tela). Edite em src/data/conteudo.ts */
+import Icon from './Icon.astro'
 import { numeros } from '../data/conteudo'
+import { url } from '../lib/rotas'
+
+/* comApresentacao: frase sobre a IMar + botão para Quem somos (usado na página inicial) */
+interface Props { comApresentacao?: boolean }
+const { comApresentacao = false } = Astro.props
 
 const lista = numeros.filter((n) => n.confirmado || import.meta.env.DEV)
 const casas = (v: number) => (Number.isInteger(v) ? 0 : 1)
 const formatar = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: casas(v), maximumFractionDigits: casas(v) })
 ---
 
-{lista.length > 0 && (
+{(lista.length > 0 || comApresentacao) && (
   <section class="nums-sec">
     <div class="wrap">
+      {comApresentacao && (
+        <div class="nums__intro">
+          <h2 class="h2" data-split>Estudantes do mar, trabalhando em <em>terra firme</em>.</h2>
+          <div data-reveal>
+            <p class="lead">Somos a Empresa Júnior do Instituto do Mar da Unifesp. Desde 2015, unimos ciência e prática para gerar impacto na sociedade e no meio ambiente.</p>
+            <a class="btn btn--ghost" href={url('quem-somos')} data-magnetic><span>Conheça a IMar Júnior</span><Icon name="seta" /></a>
+          </div>
+        </div>
+      )}
       <dl class="sobre__nums" style={`--n:${lista.length}`}>
         {lista.map((n) => (
           <div data-reveal>
@@ -24,6 +39,10 @@ const formatar = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
 
 <style>
   .nums-sec { position: relative; z-index: 2; padding: clamp(56px, 8vw, 110px) 0; }
+  .nums__intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 80px); align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
+  .nums__intro .h2 { margin: 0; }
+  .nums__intro .lead { margin-bottom: 24px; }
+  @media (max-width: 860px) { .nums__intro { grid-template-columns: 1fr; } }
   .sobre__nums {
     display: grid; grid-template-columns: repeat(var(--n, 4), 1fr); margin: 0;
     border-top: 1px solid var(--line);
